@@ -1,5 +1,5 @@
 import { MenuProps } from 'antd'
-import GMenu from '../base/components/GMenu'
+import { GMenu } from '../base/components'
 
 type MenuItem = Required<MenuProps>['items'][number]
 
@@ -14,4 +14,4 @@ const GeometryMenu = () => {
   return <GMenu onClickFn={e => console.log(e)} items={items} />
 }
 
-export default GeometryMenu
+export { GeometryMenu }

@@ -20,4 +20,4 @@ const GMenu = ({
   )
 }
 
-export default GMenu
+export { GMenu }
