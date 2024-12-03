@@ -7,6 +7,8 @@ const App: React.FC = () => {
   const divRef = useRef<HTMLDivElement>(null)
   const { canvas } = useCanvas(divRef.current)
   useCanvasGrid(canvas)
+  const ctx = canvas?.getContext('2d')
+  ctx?.scale(2, 2)
 
   return (
     <div className="flex h-full">
