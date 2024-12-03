@@ -24,7 +24,7 @@ class Scene extends Group {
   // 类型
   readonly isScene = true
   // 子元素
-  children: Array<any>
+  children: Array<Object2D>
 
   constructor(attr: SceneType = {}) {
     super()
@@ -47,6 +47,10 @@ class Scene extends Group {
     for (const [key, val] of Object.entries(attr)) {
       ;(this as any)[key] = val
     }
+  }
+
+  add(child: Object2D) {
+    this.children.push(child)
   }
 
   /*  渲染 */
