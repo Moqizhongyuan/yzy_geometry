@@ -12,7 +12,7 @@ const GMenu = ({
   return (
     <Menu
       onClick={onClickFn}
-      style={{ width: 256 }}
+      style={{ width: 200 }}
       defaultSelectedKeys={['1']}
       mode="inline"
       items={items}
