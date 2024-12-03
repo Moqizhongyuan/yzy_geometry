@@ -1,25 +1,30 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import './index.css'
 import { GeometryMenu } from './components/GeometryMenu'
-import { useCanvas, useCanvasGrid } from './hooks'
-import { useScene } from './hooks/useScene'
-import { useOrbitController } from './hooks/useOrbitController'
+import { Scene } from './canvas/core'
+import { OrbitController } from './canvas/controler'
+import { Rectangle } from './canvas/geometry'
 
 const App: React.FC = () => {
   const divRef = useRef<HTMLDivElement>(null)
-  const { canvas } = useCanvas(divRef.current)
-  useCanvasGrid(canvas)
-  const scene = useScene(canvas)
-  const orbitController = useOrbitController(scene?.camera)
+  const [orbitController, setOrbit] = useState<OrbitController>()
+  useEffect(() => {
+    const canvas = document.createElement('canvas')
+    canvas.width = divRef.current?.offsetWidth ?? 1000
+    canvas.height = divRef.current?.offsetHeight ?? 1000
+    divRef.current?.appendChild(canvas)
+    const scene = new Scene('coordinate')
+    scene.canvas = canvas
+    const rect = new Rectangle(20, 20)
+    scene.add(rect)
+    scene.render()
+    const orbitController = new OrbitController(scene.camera)
+    orbitController.addEventListener('change', () => {
+      scene.render()
+    })
+    setOrbit(orbitController)
+  }, [])
   const [isDragging, setIsDragging] = useState(false)
-  // const [lastPosition, setLastPosition] = useState<{
-  //   x: number
-  //   y: number
-  // } | null>(null)
-  orbitController?.addEventListener('change', () => {
-    scene?.render()
-  })
-
   return (
     <div className="flex h-full">
       <GeometryMenu />
@@ -31,28 +36,6 @@ const App: React.FC = () => {
           console.log(e.clientX, e.clientY)
         }}
         onMouseMove={e => {
-          //   const currentX = e.clientX
-          //   const currentY = e.clientY
-          //   if (lastPosition && isDragging) {
-          //     const deltaX = currentX - lastPosition.x
-          //     const deltaY = currentY - lastPosition.y
-          //     // 判断移动的方向
-          //     if (Math.abs(deltaX) > Math.abs(deltaY)) {
-          //       if (deltaX > 0) {
-          //         console.log(deltaX)
-          //       } else {
-          //         console.log(deltaX)
-          //       }
-          //     } else {
-          //       if (deltaY > 0) {
-          //         console.log(deltaY)
-          //       } else {
-          //         console.log(deltaY)
-          //       }
-          //     }
-          //     scene?.render()
-          //   }
-          //   setLastPosition({ x: currentX, y: currentY })
           orbitController?.pointermove(e.clientX, e.clientY)
         }}
         onMouseUp={() => {

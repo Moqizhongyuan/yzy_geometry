@@ -1,8 +1,9 @@
 import { Camera } from './Camera'
 import { Group } from '../objects/Group'
-import { Object2D } from '../objects'
+import { Background, Object2D } from '../objects'
 import { Vector2 } from '../math/Vector2'
 import { Matrix3 } from '../math/Matrix3'
+import { ThemeType } from '../objects'
 
 type SceneType = {
   canvas?: HTMLCanvasElement
@@ -26,10 +27,13 @@ class Scene extends Group {
   // 子元素
   children: Array<Object2D>
 
-  constructor(attr: SceneType = {}) {
+  constructor(theme: ThemeType = 'none', attr: SceneType = {}) {
     super()
     this.setOption(attr)
     this.children = []
+    const background = new Background(theme)
+    background.parent = this
+    this.add(background)
   }
   get canvas() {
     return this._canvas
@@ -81,7 +85,6 @@ class Scene extends Group {
       ctx.restore()
     }
     ctx.restore()
-    console.log('object')
   }
 
   /* client坐标转canvas坐标 */
