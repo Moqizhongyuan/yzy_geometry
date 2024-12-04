@@ -51,10 +51,6 @@ class Scene extends Group {
     Object.assign(this, option)
   }
 
-  add(child: Object2D) {
-    this.children.push(child)
-  }
-
   /*  渲染 */
   render() {
     const {

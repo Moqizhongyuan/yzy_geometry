@@ -37,9 +37,12 @@ const App: React.FC = () => {
     const image = new Image()
     image.src =
       'https://yxyy-pandora.oss-cn-beijing.aliyuncs.com/stamp-images/1.png'
-    const pattern = new Img({ image, offset: new Vector2(20, 20) })
-    pattern.name = 'aaa'
-    scene.add(pattern)
+    const pattern1 = new Img({ image, offset: new Vector2(20, 20) })
+    const pattern2 = new Img({ image, offset: new Vector2(-800, 20) })
+    pattern1.name = 'aaa'
+    pattern2.name = 'bbb'
+    scene.add(pattern1)
+    scene.add(pattern2)
     const imgController = new ImgController()
     scene.add(imgController)
 
@@ -55,7 +58,7 @@ const App: React.FC = () => {
       const mp = scene.clientToClip(clientX, clientY)
       switch (button) {
         case 0:
-          imgHover = selectObj([pattern], mp, scene)
+          imgHover = selectObj([pattern1, pattern2], mp, scene)
           console.log(mp)
           imgController.pointerdown(imgHover, mp)
           updateMouseCursor()
