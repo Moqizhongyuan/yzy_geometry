@@ -3,7 +3,7 @@ import { Group } from './Group'
 import { Scene } from '../core'
 import { EventDispatcher } from '../core'
 import { Matrix3 } from '../math'
-import { generateUUID } from '../math'
+import { generateUUID } from '../utils'
 
 export type Object2DType = {
   position?: Vector2

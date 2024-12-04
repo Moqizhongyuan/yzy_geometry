@@ -1,6 +1,6 @@
-import { Vector2 } from '../math/Vector2'
-import { EventDispatcher } from '../core/EventDispatcher'
-import { Camera } from '../core/Camera'
+import { Vector2 } from '../math'
+import { EventDispatcher } from '../core'
+import { Camera } from '../core'
 
 /* change 事件 */
 const _changeEvent = { type: 'change' }

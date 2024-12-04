@@ -1,5 +1,5 @@
-import { Matrix3 } from '../math/Matrix3'
-import { Vector2 } from '../math/Vector2'
+import { Matrix3 } from '../math'
+import { Vector2 } from '../math'
 
 class Camera {
   position: Vector2

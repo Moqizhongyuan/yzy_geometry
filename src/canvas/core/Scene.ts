@@ -1,8 +1,8 @@
 import { Camera } from './Camera'
-import { Group } from '../objects/Group'
+import { Group } from '../objects'
 import { Background, Object2D } from '../objects'
-import { Vector2 } from '../math/Vector2'
-import { Matrix3 } from '../math/Matrix3'
+import { Vector2 } from '../math'
+import { Matrix3 } from '../math'
 import { ThemeType } from '../objects'
 
 type SceneType = {
@@ -47,10 +47,8 @@ class Scene extends Group {
   }
 
   /* 设置属性 */
-  setOption(attr: SceneType) {
-    for (const [key, val] of Object.entries(attr)) {
-      ;(this as any)[key] = val
-    }
+  setOption(option: SceneType) {
+    Object.assign(this, option)
   }
 
   add(child: Object2D) {

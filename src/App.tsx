@@ -4,6 +4,7 @@ import { GeometryMenu } from './components/GeometryMenu'
 import { Scene } from './canvas/core'
 import { OrbitController } from './canvas/controler'
 import { Rectangle } from './canvas/geometry'
+import { Img } from './canvas/objects'
 
 const App: React.FC = () => {
   const divRef = useRef<HTMLDivElement>(null)
@@ -17,6 +18,11 @@ const App: React.FC = () => {
     scene.canvas = canvas
     const rect = new Rectangle(20, 20)
     scene.add(rect)
+    const image = new Image()
+    image.src =
+      'https://yxyy-pandora.oss-cn-beijing.aliyuncs.com/stamp-images/1.png'
+    const pattern = new Img({ image })
+    scene.add(pattern)
     scene.render()
     const orbitController = new OrbitController(scene.camera)
     orbitController.addEventListener('change', () => {
