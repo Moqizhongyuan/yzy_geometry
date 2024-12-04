@@ -91,12 +91,12 @@ class Object2D extends EventDispatcher {
   }
 
   /* 从父级中删除自身 */
-  // remove() {
-  //   const { parent } = this
-  //   if (parent) {
-  //     parent.remove(this)
-  //   }
-  // }
+  remove(obj?: Object2D) {
+    const { parent } = this
+    if (parent && !obj) {
+      parent.remove(this)
+    }
+  }
 
   /* 获取场景 */
   getScene(): Scene | null {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Camera } from '../canvas/core'
-import { OrbitController } from '../canvas/controler'
+import { OrbitController } from '../canvas/controller'
 
 export function useOrbitController(camera?: Camera) {
   const [orbitController, setOrbitController] = useState<OrbitController>()

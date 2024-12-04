@@ -1,8 +1,8 @@
-import { Matrix3 } from '../math/Matrix3'
 import { Vector2 } from '../math/Vector2'
 import { BasicStyle, BasicStyleType } from '../style/BasicStyle'
-import { Object2D, Object2DType } from './Object2D'
+import { Object2DType } from './Object2D'
 import { crtPathByMatrix } from '../utils'
+import { Rectangle } from '../geometry'
 
 type ImgType = Object2DType & {
   image?: CanvasImageSource
@@ -20,10 +20,8 @@ type View = {
   height: number
 }
 
-class Img extends Object2D {
+class Img extends Rectangle {
   image: CanvasImageSource = new Image()
-  offset: Vector2 = new Vector2()
-  size: Vector2 = new Vector2(300, 150)
   view: View | undefined
   style: BasicStyle = new BasicStyle()
 
@@ -31,7 +29,7 @@ class Img extends Object2D {
   readonly isImg = true
 
   constructor(attr: ImgType = {}) {
-    super()
+    super(attr)
     this.setOption(attr)
   }
 
@@ -51,22 +49,6 @@ class Img extends Object2D {
           this[key] = val
       }
     }
-  }
-
-  /* 世界模型矩阵*偏移矩阵 */
-  get moMatrix(): Matrix3 {
-    const {
-      offset: { x, y }
-    } = this
-    return this.worldMatrix.multiply(new Matrix3().makeTranslation(x, y))
-  }
-
-  /* 视图投影矩阵*世界模型矩阵*偏移矩阵  */
-  get pvmoMatrix(): Matrix3 {
-    const {
-      offset: { x, y }
-    } = this
-    return this.pvmMatrix.multiply(new Matrix3().makeTranslation(x, y))
   }
 
   /* 绘图 */
@@ -99,7 +81,7 @@ class Img extends Object2D {
     const {
       size: { x: imgW, y: imgH }
     } = this
-    crtPathByMatrix(ctx, [0, 0, imgW, 0, imgW, imgH, 0, imgH], matrix)
+    crtPathByMatrix(ctx, [0, 0, imgW, 0, imgW, imgH, 0, imgH], matrix, true)
   }
 }
 
