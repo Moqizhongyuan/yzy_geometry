@@ -183,7 +183,6 @@ class RectController extends Object2D {
       // 更新鼠标在图案父级坐标系中的位置
       this.updateParentMousePos()
       // 变换图案
-      console.log(this.rectTransformer.position)
       this.transformRect()
     } else {
       // 获取鼠标状态

@@ -1,46 +1,75 @@
 import React, { useEffect, useRef, useState } from 'react'
 import './index.css'
-import { GeometryMenu } from './components/GeometryMenu'
+import { GeometryMenu, MenuItem } from './components/GeometryMenu'
 import { Scene } from './canvas/core'
-import { ImgController, OrbitController } from './canvas/controller'
-import { Rectangle } from './canvas/objects'
-import { Img } from './canvas/objects'
+import {
+  ImgController,
+  OrbitController,
+  RectController
+} from './canvas/controller'
+import { Img, Rectangle } from './canvas/objects'
 import { Vector2 } from './canvas/math'
 import { selectObj } from './canvas/utils'
-import { RectController } from './canvas/controller/RectController'
+// import GeometryForm from './components/GeometryForm'
+
+const items: MenuItem[] = [
+  {
+    key: 'rectangle',
+    label: '矩形'
+  },
+  // {
+  //   key: 'image',
+  //   label: '图像',
+  //   children: [
+  //     {
+  //       key: 'internetImg',
+  //       label: '线上图像'
+  //     },
+  //     {
+  //       key: 'localImg',
+  //       label: '本地图像'
+  //     }
+  //   ]
+  // },
+  {
+    key: 'cancel',
+    label: '取消'
+  }
+]
+
+type Geometry = 'rectangle' | 'image' | null
+
+type Drawer = {
+  geometry: Geometry
+  rects: Rectangle[]
+  imgs: Img[]
+}
 
 const App: React.FC = () => {
   const divRef = useRef<HTMLDivElement>(null)
-  const [cursor, setCursor] = useState('default')
-
+  const [geometry, setGeometry] = useState<Geometry>(null)
+  const drawer = useRef<Drawer>({
+    geometry: null,
+    rects: [],
+    imgs: []
+  })
   useEffect(() => {
-    function updateMouseCursor() {
-      if (imgController.mouseState) {
-        setCursor('none')
-      } else if (imgHover) {
-        setCursor('pointer')
-      } else {
-        setCursor('default')
-      }
-    }
-    let imgHover: Img | null | Rectangle
+    //     function updateMouseCursor() {
+    //   if (imgController.mouseState) {
+    //     setCursor('none')
+    //   } else if (imgHover) {
+    //     setCursor('pointer')
+    //   } else {
+    //     setCursor('default')
+    //   }
+    // }
+    // let imgHover: Img | null | Rectangle
     const canvas = document.createElement('canvas')
     canvas.width = divRef.current?.offsetWidth ?? 1000
     canvas.height = divRef.current?.offsetHeight ?? 1000
     divRef.current?.appendChild(canvas)
-    const scene = new Scene('grid')
+    const scene = new Scene('coordinate')
     scene.setOption({ canvas })
-    const rect = new Rectangle({
-      offset: new Vector2(-100, -100),
-      size: new Vector2(200, 200)
-    })
-    scene.add(rect)
-    const image = new Image()
-    image.src =
-      'https://yxyy-pandora.oss-cn-beijing.aliyuncs.com/stamp-images/1.png'
-    const pattern1 = new Img({ image, offset: new Vector2(20, 20) })
-    pattern1.name = 'aaa'
-    scene.add(pattern1)
     const imgController = new ImgController()
     const rectController = new RectController()
     scene.add(imgController)
@@ -59,12 +88,37 @@ const App: React.FC = () => {
     canvas.addEventListener('pointerdown', (event: PointerEvent) => {
       const { button, clientX, clientY } = event
       const mp = scene.clientToClip(clientX, clientY)
+      let hover: Rectangle | Img | null = null
       switch (button) {
         case 0:
-          imgHover = selectObj([rect], mp, scene)
-          // imgController.pointerdown(imgHover, mp)
-          rectController.pointerdown(imgHover, mp)
-          updateMouseCursor()
+          if (drawer.current.geometry === 'rectangle') {
+            const rect = new Rectangle({
+              offset: new Vector2(mp.x - 100, mp.y - 100),
+              size: new Vector2(200, 200)
+            })
+            scene.add(rect)
+            drawer.current.rects.push(rect)
+            scene.render()
+          } else if (drawer.current.geometry === 'image') {
+            console.log('object')
+          }
+          setGeometry(null)
+          drawer.current.geometry = null
+          hover = selectObj(
+            [...drawer.current.rects, ...drawer.current.imgs],
+            mp,
+            scene
+          )
+          if (hover instanceof Rectangle) {
+            console.log('rect')
+            rectController.pointerdown(hover, mp)
+          } else if (hover instanceof Img) {
+            imgController.pointerdown(hover, mp)
+          } else {
+            rectController.pointerdown(hover, mp)
+            imgController.pointerdown(hover, mp)
+          }
+          // updateMouseCursor()
           break
         case 1:
           orbitController.pointerdown(clientX, clientY)
@@ -77,7 +131,7 @@ const App: React.FC = () => {
       const mp = scene.clientToClip(clientX, clientY)
       imgController.pointermove(mp)
       rectController.pointermove(mp)
-      updateMouseCursor()
+      // updateMouseCursor()
     })
 
     canvas.addEventListener('wheel', ({ deltaY }) => {
@@ -95,41 +149,34 @@ const App: React.FC = () => {
       }
     })
 
-    /* 键盘按下 */
-    window.addEventListener(
-      'keydown',
-      ({ key, altKey, shiftKey }: KeyboardEvent) => {
-        imgController.keydown(key, altKey, shiftKey)
-        updateMouseCursor()
-      }
-    )
-
-    /* 键盘抬起 */
-    window.addEventListener('keyup', ({ altKey, shiftKey }: KeyboardEvent) => {
-      imgController.keyup(altKey, shiftKey)
-    })
+    // window.addEventListener(
+    //   'keydown',
+    //   ({ key, altKey, shiftKey }: KeyboardEvent) => {
+    //     imgController.keydown(key, altKey, shiftKey)
+    //     rectController.keydown(key, altKey, shiftKey)
+    //     updateMouseCursor()
+    //   }
+    // )
+    // window.addEventListener('keyup', ({ altKey, shiftKey }: KeyboardEvent) => {
+    //   imgController.keyup(altKey, shiftKey)
+    //   rectController.keyup(altKey, shiftKey)
+    // })
 
     scene.render()
   }, [])
-  // const [isDragging, setIsDragging] = useState(false)
   return (
-    <div className="flex h-full">
-      <GeometryMenu />
-      <div
-        ref={divRef}
-        // onMouseDown={e => {
-        //   setIsDragging(true)
-        //   orbitController?.pointerdown(e.clientX, e.clientY)
-        // }}
-        // onMouseMove={e => {
-        //   orbitController?.pointermove(e.clientX, e.clientY)
-        // }}
-        // onMouseUp={() => {
-        //   setIsDragging(false)
-        //   orbitController?.pointerup()
-        // }}
-        className={`h-full w-full cursor-${cursor}`}
-      ></div>
+    <div className="flex h-full relative">
+      <GeometryMenu
+        clickFn={e => {
+          const geometry = e.key as Geometry
+          setGeometry(geometry)
+          drawer.current.geometry = geometry
+        }}
+        items={items}
+        selectKeys={[geometry ?? '']}
+      />
+      <div className="w-full h-full" ref={divRef}></div>
+      {/* <GeometryForm /> */}
     </div>
   )
 }

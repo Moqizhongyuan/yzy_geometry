@@ -1,6 +1,6 @@
 import { Matrix3, Vector2 } from '../math'
 import { Object2D } from '.'
-import { crtPathByMatrix } from '../utils'
+import { crtPath, crtPathByMatrix } from '../utils'
 
 type RectType = {
   offset?: Vector2
@@ -46,14 +46,36 @@ class Rectangle extends Object2D {
 
   /* 绘图 */
   drawShape(ctx: CanvasRenderingContext2D) {
-    const { offset, size } = this
-
+    const {
+      offset: { x, y },
+      size: { width, height }
+    } = this
     // 绘制矩形
-    if (this.isStroke) {
-      ctx.strokeRect(offset.x, offset.y, size.width, size.height)
-    }
     if (this.isFill) {
-      ctx.fillRect(offset.x, offset.y, size.width, size.height)
+      ctx.fillRect(x, y, width, height)
+    }
+    if (this.isStroke) {
+      const vertices = [
+        x,
+        y,
+        x + width,
+        y,
+        x + width,
+        y + height,
+        x,
+        y + height
+      ]
+      for (let i = 0, len = vertices.length; i < len; i += 2) {
+        const { x, y } = new Vector2(vertices[i], vertices[i + 1]).applyMatrix3(
+          this.pvmMatrix
+        )
+        vertices[i] = x
+        vertices[i + 1] = y
+      }
+      ctx.restore()
+      crtPath(ctx, vertices, true)
+      ctx.stroke()
+      ctx.save()
     }
   }
 
