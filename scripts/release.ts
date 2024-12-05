@@ -103,9 +103,9 @@ async function main() {
   await run('git', ['add', '-A'])
   await run('git', ['commit', '-m', `release: v${targetVersion}`])
 
-  // 7. 执行 npm publish
-  step('\nPublishing packages...')
-  await run('pnpm', ['publish', '--access', 'public'])
+  // // 7. 执行 npm publish
+  // step('\nPublishing packages...')
+  // await run('pnpm', ['publish', '--access', 'public'])
 
   // 8. git push 并打 tag
   step('\nPushing to GitHub...')
