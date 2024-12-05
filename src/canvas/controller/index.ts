@@ -1,3 +1,4 @@
 export * from './ImgController'
 export * from './OrbitController'
-export * from '../Frame/ImgFrame'
+export * from './MouseShape'
+export * from './RectController'

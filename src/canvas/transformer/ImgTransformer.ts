@@ -34,7 +34,7 @@ type ImgTransformerType = {
 
 class ImgTransformer {
   /* 变换图案 */
-  img = new Img()
+  private img = new Img()
 
   /* 暂存图案的变换信息 */
   position = new Vector2()

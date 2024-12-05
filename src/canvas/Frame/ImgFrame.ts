@@ -1,22 +1,46 @@
-import { Matrix3 } from '../math'
-import { Vector2 } from '../math'
-import { Img } from '../objects'
+import { Matrix3 } from '../math/Matrix3'
+import { Vector2 } from '../math/Vector2'
+import { Img } from '../objects/Img'
 import { crtPath, crtPathByMatrix } from '../utils'
-import { IFrame } from '.'
-import { RectFrame } from '.'
 
 const pi2 = Math.PI * 2
 
+export type State = 'scale' | 'scaleX' | 'scaleY' | 'rotate' | 'move' | null
+
+type Level = 'moMatrix' | 'pvmoMatrix'
+
+let _bool: boolean = false
+
+/* 虚拟canvas上下文对象 */
+const ctx = document
+  .createElement('canvas')
+  .getContext('2d') as CanvasRenderingContext2D
+
 //参数类型
-interface IImgFrame extends IFrame {
+type FrameType = {
   img?: Img
+  level?: Level
 }
 
-class ImgFrame extends RectFrame {
+class ImgFrame {
   _img = new Img()
+  // 图案边框的顶点集合
+  vertices: number[] = []
+  // 图案中点
+  center = new Vector2()
+  // 路径变换矩阵
+  matrix = new Matrix3()
+  // 要把路径变换到哪个坐标系中，默认裁剪坐标系
+  level = 'pvmoMatrix'
 
-  constructor(attr: IImgFrame = {}) {
-    super()
+  opposite = new Vector2()
+
+  // 描边色
+  strokeStyle = '#558ef0'
+  // 填充色
+  fillStyle = '#fff'
+
+  constructor(attr: FrameType = {}) {
     Object.assign(this, attr)
   }
 
@@ -135,6 +159,93 @@ class ImgFrame extends RectFrame {
     ctx.fill()
     ctx.stroke()
     ctx.restore()
+  }
+
+  getMouseState(mp: Vector2): State {
+    const { vertices: fv } = this
+
+    /* 对角线距离 */
+    const diagonal = new Vector2(fv[0] - fv[8], fv[1] - fv[9]).length()
+
+    /* 判断缩放的距离 */
+    const scaleDist = Math.min(24, diagonal / 3)
+
+    /* x,y缩放 */
+    for (let i = 0, len = fv.length; i < len; i += 4) {
+      if (new Vector2(fv[i], fv[i + 1]).sub(mp).length() < scaleDist) {
+        const ind = (i + 8) % 16
+        this.opposite.set(fv[ind], fv[ind + 1])
+        return 'scale'
+      }
+    }
+
+    /* y向缩放 */
+    ctx.save()
+    ctx.lineWidth = scaleDist
+    ctx.beginPath()
+    crtPath(ctx, [fv[0], fv[1], fv[4], fv[5]])
+    _bool = ctx.isPointInStroke(mp.x, mp.y)
+    ctx.restore()
+    if (_bool) {
+      this.opposite.set(fv[10], fv[11])
+      return 'scaleY'
+    }
+
+    ctx.save()
+    ctx.lineWidth = scaleDist
+    ctx.beginPath()
+    crtPath(ctx, [fv[8], fv[9], fv[12], fv[13]])
+    _bool = ctx.isPointInStroke(mp.x, mp.y)
+    ctx.restore()
+    if (_bool) {
+      this.opposite.set(fv[2], fv[3])
+      return 'scaleY'
+    }
+
+    /* x向缩放 */
+    ctx.save()
+    ctx.lineWidth = scaleDist
+    ctx.beginPath()
+    crtPath(ctx, [fv[12], fv[13], fv[0], fv[1]])
+    _bool = ctx.isPointInStroke(mp.x, mp.y)
+    ctx.restore()
+    if (_bool) {
+      this.opposite.set(fv[6], fv[7])
+      return 'scaleX'
+    }
+
+    ctx.save()
+    ctx.lineWidth = scaleDist
+    ctx.beginPath()
+    crtPath(ctx, [fv[4], fv[5], fv[8], fv[9]])
+    _bool = ctx.isPointInStroke(mp.x, mp.y)
+    ctx.restore()
+    if (_bool) {
+      this.opposite.set(fv[14], fv[15])
+      return 'scaleX'
+    }
+
+    /* 移动 */
+    ctx.beginPath()
+    crtPath(ctx, fv)
+    if (ctx.isPointInPath(mp.x, mp.y)) {
+      return 'move'
+    }
+
+    /* 旋转 */
+    ctx.save()
+    ctx.lineWidth = 80
+    ctx.beginPath()
+    crtPath(ctx, fv)
+    ctx.closePath()
+    _bool = ctx.isPointInStroke(mp.x, mp.y)
+    ctx.restore()
+    if (_bool) {
+      return 'rotate'
+    }
+
+    /* 无状态 */
+    return null
   }
 }
 export { ImgFrame }

@@ -1,5 +1,5 @@
 import { Matrix3, Vector2 } from '../math'
-import { Object2D } from '../objects'
+import { Object2D } from '.'
 import { crtPathByMatrix } from '../utils'
 
 type RectType = {

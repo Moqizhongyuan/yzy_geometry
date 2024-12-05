@@ -1,4 +1,5 @@
 import { Scene } from '../core'
+import { Rectangle } from '../objects'
 import { Matrix3 } from '../math'
 import { Vector2 } from '../math'
 import { Img, Object2D } from '../objects'
@@ -37,13 +38,16 @@ function crtPath(
 }
 
 function selectObj(
-  imgGroup: Object2D[],
+  group: Object2D[],
   mp: Vector2,
   scene: Scene
-): Img | null {
-  for (const img of [...imgGroup].reverse()) {
-    if (img instanceof Img && scene.isPointInObj(img, mp, img.pvmoMatrix)) {
-      return img
+): Img | Rectangle | null {
+  for (const item of [...group].reverse()) {
+    if (
+      (item instanceof Img || item instanceof Rectangle) &&
+      scene.isPointInObj(item, mp, item.pvmoMatrix)
+    ) {
+      return item
     }
   }
   return null

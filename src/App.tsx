@@ -3,10 +3,11 @@ import './index.css'
 import { GeometryMenu } from './components/GeometryMenu'
 import { Scene } from './canvas/core'
 import { ImgController, OrbitController } from './canvas/controller'
-import { Rectangle } from './canvas/geometry'
+import { Rectangle } from './canvas/objects'
 import { Img } from './canvas/objects'
 import { Vector2 } from './canvas/math'
 import { selectObj } from './canvas/utils'
+import { RectController } from './canvas/controller/RectController'
 
 const App: React.FC = () => {
   const divRef = useRef<HTMLDivElement>(null)
@@ -22,7 +23,7 @@ const App: React.FC = () => {
         setCursor('default')
       }
     }
-    let imgHover: Img | null
+    let imgHover: Img | null | Rectangle
     const canvas = document.createElement('canvas')
     canvas.width = divRef.current?.offsetWidth ?? 1000
     canvas.height = divRef.current?.offsetHeight ?? 1000
@@ -31,20 +32,19 @@ const App: React.FC = () => {
     scene.setOption({ canvas })
     const rect = new Rectangle({
       offset: new Vector2(-100, -100),
-      size: new Vector2(50, 50)
+      size: new Vector2(200, 200)
     })
     scene.add(rect)
     const image = new Image()
     image.src =
       'https://yxyy-pandora.oss-cn-beijing.aliyuncs.com/stamp-images/1.png'
     const pattern1 = new Img({ image, offset: new Vector2(20, 20) })
-    const pattern2 = new Img({ image, offset: new Vector2(-800, 20) })
     pattern1.name = 'aaa'
-    pattern2.name = 'bbb'
     scene.add(pattern1)
-    scene.add(pattern2)
     const imgController = new ImgController()
+    const rectController = new RectController()
     scene.add(imgController)
+    scene.add(rectController)
 
     const orbitController = new OrbitController(scene.camera)
     orbitController.addEventListener('change', () => {
@@ -53,14 +53,17 @@ const App: React.FC = () => {
     imgController.addEventListener('change', () => {
       scene.render()
     })
+    rectController.addEventListener('change', () => {
+      scene.render()
+    })
     canvas.addEventListener('pointerdown', (event: PointerEvent) => {
       const { button, clientX, clientY } = event
       const mp = scene.clientToClip(clientX, clientY)
       switch (button) {
         case 0:
-          imgHover = selectObj([pattern1, pattern2], mp, scene)
-          console.log(mp)
-          imgController.pointerdown(imgHover, mp)
+          imgHover = selectObj([rect], mp, scene)
+          // imgController.pointerdown(imgHover, mp)
+          rectController.pointerdown(imgHover, mp)
           updateMouseCursor()
           break
         case 1:
@@ -73,6 +76,7 @@ const App: React.FC = () => {
       orbitController.pointermove(clientX, clientY)
       const mp = scene.clientToClip(clientX, clientY)
       imgController.pointermove(mp)
+      rectController.pointermove(mp)
       updateMouseCursor()
     })
 
@@ -83,6 +87,7 @@ const App: React.FC = () => {
       switch (event.button) {
         case 0:
           imgController.pointerup()
+          rectController.pointerup()
           break
         case 1:
           orbitController.pointerup()

@@ -1,13 +1,15 @@
-import { Rectangle } from '../geometry'
+import { Rectangle } from '../objects'
 import { Matrix3 } from '../math'
 import { Vector2 } from '../math'
 import { crtPath, crtPathByMatrix } from '../utils'
-import { Frame, IFrame, State } from '.'
-
+import { State } from '.'
 const PI2 = Math.PI * 2
 
-interface IRectFrame extends IFrame {
+type Level = 'moMatrix' | 'pvmoMatrix'
+
+type FrameType = {
   rect?: Rectangle
+  level?: Level
 }
 
 /* 布尔变量 */
@@ -18,11 +20,24 @@ const ctx = document
   .createElement('canvas')
   .getContext('2d') as CanvasRenderingContext2D
 
-class RectFrame extends Frame {
+class RectFrame {
   _rect = new Rectangle()
+  vertices: number[] = []
+  // 图案中点
+  center = new Vector2()
+  // 路径变换矩阵
+  matrix = new Matrix3()
+  // 要把路径变换到哪个坐标系中，默认裁剪坐标系
+  level = 'pvmoMatrix'
 
-  constructor(attr: IRectFrame = {}) {
-    super()
+  // 描边色
+  strokeStyle = '#558ef0'
+  // 填充色
+  fillStyle = '#fff'
+  // 对面节点
+  opposite = new Vector2()
+
+  constructor(attr: FrameType = {}) {
     Object.assign(this, attr)
   }
 

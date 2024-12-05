@@ -1,11 +1,12 @@
 import { Vector2 } from '../math'
 import { Object2D } from '../objects'
-import { Img } from '../objects'
-import { ImgFrame } from '../Frame'
 import { State } from '../Frame'
 import { MouseShape } from './MouseShape'
 import { Matrix3 } from '../math'
-import { Control, ImgData, ImgTransformer } from '../transformer'
+import { Control } from '../transformer'
+import { Rectangle } from '../objects'
+import { RectFrame } from '../Frame'
+import { RectData, RectTransformer } from '../transformer'
 
 const _changeEvent = { type: 'change' }
 
@@ -16,11 +17,11 @@ type TransformStage = {
   parentPvmInvert: Matrix3
 }
 
-class ImgController extends Object2D {
+class RectController extends Object2D {
   // 要控制的图片
-  private _img: Img | null = null
+  private _rect: Rectangle | null = null
   // 图案控制框
-  frame = new ImgFrame()
+  frame = new RectFrame()
   // 渲染顺序
   index = Infinity
   // 不受相机影响
@@ -50,7 +51,7 @@ class ImgController extends Object2D {
   // 鼠标在图案父级坐标系内的坐标位
   parentMousePos = new Vector2()
   // 选中图案时的暂存数据，用于取消变换
-  controlStage: ImgData = {
+  controlStage: RectData = {
     position: new Vector2(),
     scale: new Vector2(1, 1),
     rotate: 0,
@@ -63,24 +64,24 @@ class ImgController extends Object2D {
     parentPvmInvert: new Matrix3()
   }
   // 图案变换器
-  imgTransformer = new ImgTransformer({
+  rectTransformer = new RectTransformer({
     mousePos: this.parentMousePos,
     origin: this.origin
   })
 
-  get img() {
-    return this._img
+  get rect() {
+    return this._rect
   }
-  set img(val) {
-    if (this._img === val) {
+  set rect(val) {
+    if (this._rect === val) {
       return
     }
-    this._img = val
+    this._rect = val
     if (val) {
-      this.imgTransformer.setOption({ img: val })
-      this.imgTransformer.passImgDataTo(this.controlStage)
-      this.frame.img = val
-      this.dispatchEvent({ type: 'selected', img: val })
+      this.rectTransformer.setOption({ rect: val })
+      this.rectTransformer.passRectDataTo(this.controlStage)
+      this.frame.rect = val
+      this.dispatchEvent({ type: 'selected', rect: val })
     } else {
       this.mouseState = null
       this.controlState = null
@@ -96,12 +97,12 @@ class ImgController extends Object2D {
       return
     }
     this._controlState = val
-    const { img } = this
-    if (!val || !img) {
+    const { rect } = this
+    if (!val || !rect) {
       return
     }
     // 暂存变换数据
-    this.saveTransformData(img)
+    this.saveTransformData(rect)
     if (val === 'move') {
       return
     }
@@ -112,7 +113,7 @@ class ImgController extends Object2D {
       this.setScaleOrigin()
     }
     // 在不改变图案世界位的前提下，基于变换基点，偏移图案
-    this.offsetImgByOrigin(img)
+    this.offsetRectByOrigin(rect)
   }
 
   get altKey() {
@@ -123,27 +124,37 @@ class ImgController extends Object2D {
       return
     }
     this._altKey = val
-    const { img, controlState, imgTransformer } = this
-    if (!img) {
+    const { rect, controlState, rectTransformer } = this
+    if (!rect) {
       return
     }
     if (controlState?.includes('scale')) {
       // 将图案回退到变换之前的状态
-      imgTransformer.restoreImg()
+      rectTransformer.restoreRect()
       // 缩放基点在图案中心
       this.setScaleOrigin()
       // 根据变换基点，偏移图案
-      this.offsetImgByOrigin(img)
+      this.offsetRectByOrigin(rect)
       // 变换图案
-      this.transformImg()
+      this.transformRect()
     }
   }
 
+  /* 更新鼠标在图案父级坐标系中的位置 */
+  updateParentMousePos() {
+    const {
+      clipMousePos,
+      parentMousePos,
+      transformStage: { parentPvmInvert }
+    } = this
+    parentMousePos.copy(clipMousePos.clone().applyMatrix3(parentPvmInvert))
+  }
+
   /* 鼠标按下 */
-  pointerdown(img: Img | null, mp: Vector2) {
+  pointerdown(rect: Rectangle | null, mp: Vector2) {
     if (!this.mouseState) {
-      this.img = img
-      if (!img) {
+      this.rect = rect
+      if (!rect) {
         return
       }
     }
@@ -161,18 +172,8 @@ class ImgController extends Object2D {
     this.dispatchEvent(_changeEvent)
   }
 
-  /* 更新鼠标在图案父级坐标系中的位置 */
-  updateParentMousePos() {
-    const {
-      clipMousePos,
-      parentMousePos,
-      transformStage: { parentPvmInvert }
-    } = this
-    parentMousePos.copy(clipMousePos.clone().applyMatrix3(parentPvmInvert))
-  }
-
   pointermove(mp: Vector2) {
-    if (!this.img) {
+    if (!this.rect) {
       return
     }
     // 更新鼠标世界位
@@ -182,7 +183,8 @@ class ImgController extends Object2D {
       // 更新鼠标在图案父级坐标系中的位置
       this.updateParentMousePos()
       // 变换图案
-      this.transformImg()
+      console.log(this.rectTransformer.position)
+      this.transformRect()
     } else {
       // 获取鼠标状态
       this.mouseState = this.frame.getMouseState(mp)
@@ -190,17 +192,17 @@ class ImgController extends Object2D {
     this.dispatchEvent(_changeEvent)
   }
   /* 变换图案 */
-  transformImg() {
-    const { imgTransformer, controlState, shiftKey, img } = this
+  transformRect() {
+    const { rectTransformer, controlState, shiftKey, rect } = this
     if (controlState) {
-      imgTransformer[(controlState + Number(shiftKey)) as Control]()
+      rectTransformer[(controlState + Number(shiftKey)) as Control]()
     }
-    this.dispatchEvent({ type: 'transformed', img })
+    this.dispatchEvent({ type: 'transformed', rect })
   }
 
   draw(ctx: CanvasRenderingContext2D) {
-    const { img } = this
-    if (!img) {
+    const { rect } = this
+    if (!rect) {
       return
     }
     const { frame, mouseShape, mouseState } = this
@@ -210,21 +212,21 @@ class ImgController extends Object2D {
   }
 
   /* 暂存变换数据 */
-  saveTransformData(img: Img) {
+  saveTransformData(rect: Rectangle) {
     const {
       clipMousePos,
-      imgTransformer,
+      rectTransformer,
       frame,
       transformStage: { clipCenter, clipOpposite, parentPvmInvert }
     } = this
-    const { parent } = img
+    const { parent } = rect
     if (parent) {
       parentPvmInvert.copy(parent.pvmMatrix.invert())
     }
     clipCenter.copy(frame.center)
     clipOpposite.copy(frame.opposite)
-    imgTransformer.setOption({
-      img,
+    rectTransformer.setOption({
+      rect,
       mouseStart: clipMousePos.clone().applyMatrix3(parentPvmInvert)
     })
   }
@@ -233,7 +235,7 @@ class ImgController extends Object2D {
   setRotateOrigin() {
     const {
       origin,
-      imgTransformer,
+      rectTransformer,
       clipOrigin,
       transformStage: { clipCenter, parentPvmInvert }
     } = this
@@ -242,7 +244,7 @@ class ImgController extends Object2D {
     // 将图案中心点从裁剪坐标系转父级坐标系
     origin.copy(clipCenter.clone().applyMatrix3(parentPvmInvert))
     // 更新父级坐标系里基点到鼠标起点的向量
-    imgTransformer.updateOriginToMouseStart()
+    rectTransformer.updateOriginToMouseStart()
   }
 
   /* 设置缩放基点 */
@@ -250,7 +252,7 @@ class ImgController extends Object2D {
     const {
       altKey,
       origin,
-      imgTransformer,
+      rectTransformer,
       clipOrigin,
       transformStage: { clipCenter, clipOpposite, parentPvmInvert }
     } = this
@@ -263,11 +265,11 @@ class ImgController extends Object2D {
       origin.copy(clipOpposite.clone().applyMatrix3(parentPvmInvert))
     }
     // 更新父级坐标系里基点到鼠标起点的向量
-    imgTransformer.updateOriginToMouseStart()
+    rectTransformer.updateOriginToMouseStart()
   }
 
-  offsetImgByOrigin(img: Img) {
-    const { offset, position, scale, rotate, pvmMatrix } = img
+  offsetRectByOrigin(rect: Rectangle) {
+    const { offset, position, scale, rotate, pvmMatrix } = rect
     // 偏移量
     const curOffset = new Vector2().subVectors(
       offset,
@@ -291,23 +293,23 @@ class ImgController extends Object2D {
   keydown(key: string, altKey: boolean, shiftKey: boolean) {
     this.shiftKey = shiftKey
     this.altKey = altKey
-    if (this.img) {
+    if (this.rect) {
       switch (key) {
         case 'Escape':
           // 将选中图案时存储的图案变换数据controlStage 拷贝到图案中
-          this.imgTransformer.copyImgData(this.controlStage)
+          this.rectTransformer.copyRectData(this.controlStage)
           // 图案置空
-          this.img = null
+          this.rect = null
           break
         case 'Enter':
           // 图案置空
-          this.img = null
+          this.rect = null
           break
         case 'Delete':
           // 将img从其所在的group中删除
-          this.img.remove()
+          this.rect.remove()
           // 图案置空
-          this.img = null
+          this.rect = null
           break
       }
     }
@@ -320,4 +322,4 @@ class ImgController extends Object2D {
     this.dispatchEvent(_changeEvent)
   }
 }
-export { ImgController }
+export { RectController }
