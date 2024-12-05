@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import Switcher from '../base/components/Switcher'
 
 const NavBar = () => {
   return (
@@ -7,7 +8,7 @@ const NavBar = () => {
         RY
       </Link>
       <div className="flex flex-[2] justify-between items-center">
-        <div>主题切换</div>
+        <Switcher />
         <Link to={'/home'}>首页</Link>
         <Link to={'/detail'}>详情</Link>
         <Link to={'/docs'}>文档</Link>

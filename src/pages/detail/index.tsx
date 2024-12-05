@@ -9,20 +9,20 @@ const items: MenuItem[] = [
     key: 'rectangle',
     label: '矩形'
   },
-  // {
-  //   key: 'image',
-  //   label: '图像',
-  //   children: [
-  //     {
-  //       key: 'internetImg',
-  //       label: '线上图像'
-  //     },
-  //     {
-  //       key: 'localImg',
-  //       label: '本地图像'
-  //     }
-  //   ]
-  // },
+  {
+    key: 'image',
+    label: '图像',
+    children: [
+      {
+        key: 'internetImg',
+        label: '线上图像'
+      },
+      {
+        key: 'localImg',
+        label: '本地图像'
+      }
+    ]
+  },
   {
     key: 'cancel',
     label: '取消'
@@ -47,6 +47,7 @@ const Detail = () => {
   return (
     <div className="flex h-full relative">
       <GeometryMenu
+        className="py-2"
         clickFn={e => {
           const geometry = e.key as Geometry
           setGeometry(geometry)

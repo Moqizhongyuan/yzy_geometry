@@ -1,18 +1,29 @@
-import { MenuProps } from 'antd'
-import { GMenu } from '../base/components'
+import { Menu, MenuProps } from 'antd'
 
 export type MenuItem = Required<MenuProps>['items'][number]
 
 const GeometryMenu = ({
   items,
   clickFn,
-  selectKeys
+  selectKeys,
+  className
 }: {
   items: MenuItem[]
   clickFn: MenuProps['onClick']
   selectKeys?: string[]
+  className?: string
 }) => {
-  return <GMenu onClickFn={clickFn} items={items} selectKeys={selectKeys} />
+  return (
+    <Menu
+      style={{ width: 200 }}
+      mode="inline"
+      theme={'light'}
+      onClick={clickFn}
+      items={items}
+      selectedKeys={selectKeys}
+      className={className}
+    />
+  )
 }
 
 export { GeometryMenu }
