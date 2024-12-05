@@ -23,7 +23,7 @@ export default defineConfig({
     })
   ],
   server: {
-    https: true, // 启用 https
+    // https: true, // 启用 https
     open: true // 自动打开浏览器
   }
 })
