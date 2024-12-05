@@ -1,12 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Switch } from 'antd'
 import { SunOutlined, MoonOutlined } from '@ant-design/icons'
+import { Theme, ThemeContext } from '@components/ThemeContext'
 
 const Switcher: React.FC = () => {
   const APPEARANCE_KEY = 'appearance'
+  const context = useContext(ThemeContext)
+
   const updateAppearance = () => {
     const userPreference = localStorage.getItem(APPEARANCE_KEY)
-    setAppearance(userPreference === 'dark')
+    if (userPreference) {
+      context?.setValue(userPreference as Theme)
+    } else {
+      context?.setValue('light')
+      localStorage.setItem(APPEARANCE_KEY, 'light')
+    }
   }
 
   useEffect(() => {
@@ -17,20 +25,19 @@ const Switcher: React.FC = () => {
   }, [])
 
   function toggle() {
-    if (appearance) {
-      setAppearance(false)
+    if (context?.value === 'dark') {
+      context?.setValue('light')
       // 本地状态存储
       localStorage.setItem(APPEARANCE_KEY, 'light')
     } else {
-      setAppearance(true)
+      context?.setValue('dark')
       // 本地状态存储
       localStorage.setItem(APPEARANCE_KEY, 'dark')
     }
   }
-  const [appearance, setAppearance] = useState(true)
   return (
     <Switch
-      value={appearance}
+      value={context?.value === 'light'}
       checkedChildren={<SunOutlined />}
       unCheckedChildren={<MoonOutlined />}
       onClick={() => toggle()}
