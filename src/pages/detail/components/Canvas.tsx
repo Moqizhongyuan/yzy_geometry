@@ -125,8 +125,18 @@ const Canvas = ({
     window.addEventListener(
       'keydown',
       ({ key, altKey, shiftKey }: KeyboardEvent) => {
+        if (key === 'Delete') {
+          if (hover.current instanceof Rectangle) {
+            drawer.current.rects.splice(
+              drawer.current.rects.indexOf(hover.current),
+              1
+            )
+          }
+          hover.current = null
+        }
         imgController.keydown(key, altKey, shiftKey)
         rectController.keydown(key, altKey, shiftKey)
+
         updateMouseCursor()
       }
     )

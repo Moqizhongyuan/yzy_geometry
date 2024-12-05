@@ -5,6 +5,6 @@
 #root {
   margin: 0;
   padding: 0;
-  height: calc(100vh - 32px);
+  height: calc(100vh - 40px);
   width: 100vw;
 }
