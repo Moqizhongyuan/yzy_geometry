@@ -1,50 +1,15 @@
-# React + TypeScript + Vite
+# 简介
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 这是什么
 
-Currently, two official plugins are available:
+这是一款小型的图片编辑工具，目前实现矩形的平移、缩放、旋转操作，可以缩放和平移坐标系，且缩放坐标系的前提下图形不会失真
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 设计思想
 
-## Expanding the ESLint configuration
+该编辑器的设计思想借鉴于某位可视化领域的大佬，底层主要是事件驱动机制，通过事件发布-订阅模式来重绘制界面，原型是实现图片的变换，本编辑器将尽可能多的实现其他图形的变换操作
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+![构建思想](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/32cfa95544044368bdae290fbc59062d~tplv-k3u1fbpfcp-jj-mark:3024:0:0:0:q75.awebp#?w=1286&h=630&s=91783&e=png&b=fdfdfd)
 
-- Configure the top-level `parserOptions` property like this:
+## 线上部署
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname
-    }
-  }
-})
-```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules
-  }
-})
-```
+[Demo](https://47.115.214.21/)
