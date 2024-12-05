@@ -14,6 +14,7 @@ class Rectangle extends Object2D {
   size: Vector2 = new Vector2(300, 150)
   isFill: boolean = false
   isStroke: boolean = true
+  enableCamera = false
 
   // 类型
   readonly isImg = true
