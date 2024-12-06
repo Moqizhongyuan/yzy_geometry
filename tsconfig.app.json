@@ -26,7 +26,8 @@
     "paths": {
       "@components/*": ["src/components/*"],
       "@assets/*": ["src/assets/*"],
-      "@canvas/*": ["src/canvas/*"]
+      "@canvas/*": ["src/canvas/*"],
+      "@constants/*": ["src/constants/*"]
     }
   },
   "include": ["src"]

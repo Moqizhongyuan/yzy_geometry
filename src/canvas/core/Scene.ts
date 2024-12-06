@@ -1,9 +1,8 @@
 import { Camera } from './Camera'
-import { Group } from '../objects'
+import { BackgroundType, Group } from '../objects'
 import { Background, Object2D } from '../objects'
 import { Vector2 } from '../math'
 import { Matrix3 } from '../math'
-import { ThemeType } from '../objects'
 
 type SceneType = {
   canvas?: HTMLCanvasElement
@@ -27,11 +26,11 @@ class Scene extends Group {
   // 子元素
   children: Array<Object2D>
 
-  constructor(theme: ThemeType = 'none', attr: SceneType = {}) {
+  constructor(backgroundProp: BackgroundType, attr: SceneType = {}) {
     super()
     this.setOption(attr)
     this.children = []
-    const background = new Background(theme)
+    const background = new Background(backgroundProp)
     background.parent = this
     this.add(background)
   }

@@ -8,6 +8,7 @@ import { Vector2 } from '@canvas/math'
 import { Img, Rectangle } from '@canvas/objects'
 import { selectObj } from '@canvas/utils'
 import { useEffect, useRef, useState } from 'react'
+import style from './index.module.scss'
 
 type Geometry = 'rectangle' | 'image' | null
 
@@ -29,7 +30,7 @@ const Canvas = ({
   const hover = useRef<Rectangle | Img | null>(null)
   useEffect(() => {
     function updateMouseCursor() {
-      if (imgController.mouseState) {
+      if (imgController.mouseState || rectController.mouseState) {
         setCursor('none')
       } else if (hover.current) {
         setCursor('pointer')
@@ -41,7 +42,7 @@ const Canvas = ({
     canvas.width = divRef.current?.offsetWidth ?? 1000
     canvas.height = divRef.current?.offsetHeight ?? 1000
     divRef.current?.appendChild(canvas)
-    const scene = new Scene('coordinate')
+    const scene = new Scene({ theme: 'coordinate' })
     scene.setOption({ canvas })
     const imgController = new ImgController()
     const rectController = new RectController()
@@ -61,7 +62,6 @@ const Canvas = ({
     canvas.addEventListener('pointerdown', (event: PointerEvent) => {
       const { button, clientX, clientY } = event
       const mp = scene.clientToClip(clientX, clientY)
-      // let hover: Rectangle | Img | null = null
       switch (button) {
         case 0:
           if (drawer.current.geometry === 'rectangle') {
@@ -82,10 +82,10 @@ const Canvas = ({
             mp,
             scene
           )
-          if (hover instanceof Rectangle) {
-            rectController.pointerdown(hover, mp)
-          } else if (hover instanceof Img) {
-            imgController.pointerdown(hover, mp)
+          if (hover.current instanceof Rectangle) {
+            rectController.pointerdown(hover.current, mp)
+          } else if (hover.current instanceof Img) {
+            imgController.pointerdown(hover.current, mp)
           } else {
             const hoverVal = hover.current as null
             rectController.pointerdown(hoverVal, mp)
@@ -147,7 +147,12 @@ const Canvas = ({
 
     scene.render()
   }, [])
-  return <div className={`w-full h-full cursor-${cursor}`} ref={divRef}></div>
+  return (
+    <div
+      className={`w-full h-full cursor-${cursor} ${style.canvas}`}
+      ref={divRef}
+    ></div>
+  )
 }
 
 export default Canvas
