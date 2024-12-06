@@ -1,6 +1,4 @@
-import { Menu, MenuProps, MenuTheme } from 'antd'
-import { useContext } from 'react'
-import { ThemeContext } from './ThemeContext'
+import { Menu, MenuProps } from 'antd'
 
 export type MenuItem = Required<MenuProps>['items'][number]
 
@@ -15,12 +13,10 @@ const GeometryMenu = ({
   selectKeys?: string[]
   className?: string
 }) => {
-  const context = useContext(ThemeContext)
   return (
     <Menu
       style={{ width: 200 }}
       mode="inline"
-      theme={context?.value as MenuTheme}
       onClick={clickFn}
       items={items}
       selectedKeys={selectKeys}

@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "antd": "^5.22.3",
+    "antd-style": "^3.7.1",
     "autoprefixer": "^10.4.20",
     "classnames": "^2.5.1",
     "postcss": "^8.4.49",
