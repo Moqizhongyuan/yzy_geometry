@@ -39,6 +39,10 @@ class Object2D extends EventDispatcher {
   // UUID
   uuid = generateUUID()
 
+  strokeStyle: string = 'black'
+
+  fillStyle: string = 'black'
+
   // 类型
   readonly isObject2D = true
 

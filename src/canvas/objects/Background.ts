@@ -2,14 +2,20 @@ import { Scene } from '../core'
 import { Object2D } from './Object2D'
 
 export type ThemeType = 'coordinate' | 'grid' | 'none'
+export type BackgroundType = {
+  theme?: ThemeType
+  strokeStyle?: string
+  fillStyle?: string
+}
 
 const DISTANCE = 10000
 
 class Background extends Object2D {
-  private theme: ThemeType
-  constructor(theme: ThemeType) {
+  private theme: ThemeType = 'none'
+
+  constructor(backgroundProp: BackgroundType) {
     super()
-    this.theme = theme
+    Object.assign(this, backgroundProp)
   }
 
   drawShape(ctx: CanvasRenderingContext2D): void {
@@ -18,7 +24,7 @@ class Background extends Object2D {
     } = this.parent as Scene
     switch (this.theme) {
       case 'grid':
-        ctx.strokeStyle = '#ddd'
+        ctx.strokeStyle = this.strokeStyle
         for (let y = -DISTANCE; y <= DISTANCE; y += 20) {
           ctx.beginPath()
           ctx.moveTo(-DISTANCE, y)
@@ -35,8 +41,8 @@ class Background extends Object2D {
         }
         break
       case 'coordinate':
-        ctx.strokeStyle = '#666'
-        ctx.fillStyle = '#000'
+        ctx.strokeStyle = this.strokeStyle
+        ctx.fillStyle = this.fillStyle
         ctx.beginPath()
         ctx.moveTo(-width / 2, 0)
         ctx.lineTo(width / 2, 0)

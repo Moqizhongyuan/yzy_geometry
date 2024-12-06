@@ -25,7 +25,7 @@ const App = () => {
           return {
             token: {
               colorPrimary: '#149684',
-              colorBgBase: '#1a1a1a'
+              colorBgBase: '#1F1F1F'
             }
           }
         }
