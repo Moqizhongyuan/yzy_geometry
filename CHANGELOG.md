@@ -1,3 +1,22 @@
+# [1.1.0](https://github.com/Moqizhongyuan/yzy_geometry/compare/v1.0.0...v1.1.0) (2024-12-06)
+
+### Bug Fixes
+
+- 修复矩形边框多次绘制的bug，但是无背景状态下图形绘制有误 ([d2a5b3b](https://github.com/Moqizhongyuan/yzy_geometry/commit/d2a5b3b0a3970f0798a238f65a08897e07fd5cea))
+- 修复矩形在相机变换下的bug ([711556d](https://github.com/Moqizhongyuan/yzy_geometry/commit/711556df629c52c2d00cbf2a5ebed893954a201b))
+
+### Features
+
+- 路由搭建、修复了删除图形后drawer更新错误的bug ([22bd5d8](https://github.com/Moqizhongyuan/yzy_geometry/commit/22bd5d8971448d787dc65967332d9d86d46fcf27))
+- 实现侧边栏主题切换，且页面有多个tab的时候可以做到响应 ([5c872c1](https://github.com/Moqizhongyuan/yzy_geometry/commit/5c872c111c2c1d38683ccadf9d6565b0a6e4fc6c))
+- 添加路由，对鼠标样式进行调整，外加图形变换边框 ([2147e70](https://github.com/Moqizhongyuan/yzy_geometry/commit/2147e70345b3d1dafbef2eea3a07df268f2c83d8))
+- 添加主题切换功能 ([57651af](https://github.com/Moqizhongyuan/yzy_geometry/commit/57651af0cd9ef23d098fe96ca178afb6e681248c))
+- 通过cdn方式引入icon ([726271d](https://github.com/Moqizhongyuan/yzy_geometry/commit/726271d8e7832949d8fb9da463db175559f223c7))
+- 文档编写、线上部署 ([8f6f345](https://github.com/Moqizhongyuan/yzy_geometry/commit/8f6f345fb3b36e13b990231da2aca791f471599b))
+- 主题切换组件 ([847b509](https://github.com/Moqizhongyuan/yzy_geometry/commit/847b509fd040049e78774b73642a9ba7d11b0aac))
+- 主题样式调整、组件封装、项目结构调整 ([c1022b0](https://github.com/Moqizhongyuan/yzy_geometry/commit/c1022b01adfb706a532ad145333f83fa3a5422eb))
+- 主题主题变换 ([d736071](https://github.com/Moqizhongyuan/yzy_geometry/commit/d73607151529c881b7996a55f260e7afff9d950a))
+
 # 1.0.0 (2024-12-05)
 
 ### Bug Fixes
