@@ -12,7 +12,7 @@ import NavBar from './components/NavBar'
 import Doc from './pages/doc'
 import { ThemeProvider as AntThemeProvider } from 'antd-style'
 import { useContext } from 'react'
-import { ThemeContext } from '@components/ThemeContext'
+import ThemeContext from '@components/ThemeContext'
 
 const App = () => {
   const context = useContext(ThemeContext)

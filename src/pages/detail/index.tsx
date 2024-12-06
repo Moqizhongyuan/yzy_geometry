@@ -1,8 +1,7 @@
 import { useRef, useState } from 'react'
-import { GeometryMenu, MenuItem } from '@components/GeometryMenu'
+import GeometryMenu, { MenuItem } from '@components/GeometryMenu'
 import { Img, Rectangle } from '@canvas/objects'
 import Canvas from './components/Canvas'
-// import GeometryForm from './components/GeometryForm'
 
 const items: MenuItem[] = [
   {

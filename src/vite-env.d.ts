@@ -16,6 +16,11 @@ declare module '@canvas*' {
   export default canvas
 }
 
+declare module '@constants*' {
+  const constant: any
+  export default constant
+}
+
 declare module 'antd-style' {
   const content: any
   export const ThemeProvider: React.FC<any>

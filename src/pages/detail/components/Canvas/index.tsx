@@ -8,6 +8,7 @@ import { Vector2 } from '@canvas/math'
 import { Img, Rectangle } from '@canvas/objects'
 import { selectObj } from '@canvas/utils'
 import { useEffect, useRef, useState } from 'react'
+import style from './index.module.scss'
 
 type Geometry = 'rectangle' | 'image' | null
 
@@ -146,7 +147,12 @@ const Canvas = ({
 
     scene.render()
   }, [])
-  return <div className={`w-full h-full cursor-${cursor}`} ref={divRef}></div>
+  return (
+    <div
+      className={`w-full h-full cursor-${cursor} ${style.canvas}`}
+      ref={divRef}
+    ></div>
+  )
 }
 
 export default Canvas

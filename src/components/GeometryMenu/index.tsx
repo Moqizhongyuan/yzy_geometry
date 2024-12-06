@@ -25,4 +25,4 @@ const GeometryMenu = ({
   )
 }
 
-export { GeometryMenu }
+export default GeometryMenu

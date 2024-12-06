@@ -111,6 +111,8 @@
   --RY-c-brand-lighter: var(--RY-c-green-lighter);
   --RY-c-brand-dark: var(--RY-c-green-dark);
   --RY-c-brand-darker: var(--RY-c-green-darker);
+
+  --RY-c-canvas: var(--RY-c-white-soft)
 }
 
 .dark {
@@ -136,6 +138,8 @@
   --RY-c-text-inverse-4: var(--RY-c-text-light-4);
 
   --RY-c-text-code: var(--RY-c-indigo-lighter);
+
+  --RY-c-canvas: var(--RY-c-gray-light-3)
 }
 
 /**
