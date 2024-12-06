@@ -6,7 +6,8 @@ import {
 } from 'react-router-dom'
 import Detail from './pages/detail'
 import Home from './pages/home'
-import './index.css'
+import './styles/base.css'
+import './styles/var.css'
 import NavBar from './components/NavBar'
 import Doc from './pages/doc'
 

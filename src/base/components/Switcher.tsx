@@ -1,6 +1,5 @@
 import React, { useContext, useEffect } from 'react'
 import { Switch } from 'antd'
-import { SunOutlined, MoonOutlined } from '@ant-design/icons'
 import { Theme, ThemeContext } from '@components/ThemeContext'
 
 const Switcher: React.FC = () => {
@@ -38,8 +37,8 @@ const Switcher: React.FC = () => {
   return (
     <Switch
       value={context?.value === 'light'}
-      checkedChildren={<SunOutlined />}
-      unCheckedChildren={<MoonOutlined />}
+      checkedChildren={<i className="fa-solid fa-sun" />}
+      unCheckedChildren={<i className="fa-solid fa-moon" />}
       onClick={() => toggle()}
     />
   )

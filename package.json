@@ -22,7 +22,6 @@
     "release": "tsx ./scripts/release.ts"
   },
   "dependencies": {
-    "@ant-design/icons": "^5.5.2",
     "antd": "^5.22.3",
     "autoprefixer": "^10.4.20",
     "classnames": "^2.5.1",
@@ -30,6 +29,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.0.2",
+    "sass": "^1.82.0",
     "tailwindcss": "^3.4.15"
   },
   "devDependencies": {
