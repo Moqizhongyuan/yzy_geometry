@@ -70,7 +70,7 @@ class Editor extends EventDispatcher {
     /* 建立Img2D对象 */
     if (geometry instanceof HTMLImageElement) {
       const img = new Img({
-        geometry,
+        image: geometry,
         layerNum,
         name: '图层' + layerNum
       })
