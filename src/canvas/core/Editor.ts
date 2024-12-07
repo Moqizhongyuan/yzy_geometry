@@ -6,6 +6,7 @@ import { OrbitController, RectController } from '../controller'
 import { ImgController } from '../controller'
 // import { Vector2 } from '../math'
 import { selectObj } from '../utils'
+import { Vector2 } from '@canvas/math'
 
 export type CursorType = 'none' | 'default' | 'pointer'
 
@@ -225,8 +226,11 @@ class Editor extends EventDispatcher {
   }
 
   /* 滑动滚轮 */
-  wheel({ deltaY }: WheelEvent) {
-    this.orbitController.doScale(deltaY)
+  wheel({ deltaY, clientX, clientY }: WheelEvent) {
+    this.orbitController.doScale(
+      deltaY,
+      this.editorScene.clientToClip(clientX, clientY)
+    )
   }
 
   /* 取消右键的默认功能 */

@@ -57,17 +57,20 @@ class OrbitController extends EventDispatcher {
   }
 
   /* 缩放 */
-  doScale(deltaY: number) {
-    const { enableZoom, camera, zoomSpeed, stage } = this
+  doScale(deltaY: number, origin?: Vector2) {
+    const { enableZoom, camera, zoomSpeed } = this
     if (!enableZoom) {
       return
     }
-    stage.cameraZoom = camera.zoom
-    const scale = Math.pow(0.95, zoomSpeed)
+    let scale = Math.pow(0.95, zoomSpeed)
     if (deltaY > 0) {
-      camera.zoom /= scale
-    } else {
-      camera.zoom *= scale
+      scale = 1 / scale
+    }
+    camera.zoom *= scale
+    if (origin) {
+      const P1 = new Vector2().addVectors(origin, camera.position)
+      const P2 = P1.clone().multiplyScalar(1 / scale)
+      camera.position.add(P2.sub(P1))
     }
     this.dispatchEvent(_changeEvent)
   }
