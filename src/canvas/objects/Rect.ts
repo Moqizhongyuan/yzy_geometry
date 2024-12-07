@@ -51,6 +51,7 @@ class Rectangle extends Object2D {
       return
     }
     ctx.save()
+    ctx.beginPath()
     camera.reverseTransformInvert(ctx)
     const {
       offset: { x, y },
@@ -83,44 +84,6 @@ class Rectangle extends Object2D {
     }
     ctx.restore()
   }
-
-  // /* 绘图 */
-  // drawShape(ctx: CanvasRenderingContext2D) {
-  //   const {
-  //     offset: { x, y },
-  //     size: { width, height }
-  //   } = this
-  //   // 绘制矩形
-  //   if (this.isFill) {
-  //     ctx.fillRect(x, y, width, height)
-  //   }
-  //   if (this.isStroke) {
-  //     const vertices = [
-  //       x,
-  //       y,
-  //       x + width,
-  //       y,
-  //       x + width,
-  //       y + height,
-  //       x,
-  //       y + height
-  //     ]
-  //     for (let i = 0, len = vertices.length; i < len; i += 2) {
-  //       const { x, y } = new Vector2(vertices[i], vertices[i + 1]).applyMatrix3(
-  //         this.pvmMatrix
-  //       )
-  //       vertices[i] = x
-  //       vertices[i + 1] = y
-  //     }
-  //     ctx.restore()
-  //     ctx.save()
-  //     ctx.lineWidth = 2
-  //     crtPath(ctx, vertices, true)
-  //     ctx.stroke()
-  //     ctx.restore()
-  //     ctx.save()
-  //   }
-  // }
 
   /* 绘制图像边界 */
   crtPath(ctx: CanvasRenderingContext2D, matrix = this.pvmoMatrix) {

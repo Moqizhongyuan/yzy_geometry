@@ -26,13 +26,15 @@ class Scene extends Group {
   // 子元素
   children: Array<Object2D>
 
-  constructor(backgroundProp: BackgroundType, attr: SceneType = {}) {
+  constructor(backgroundProp?: BackgroundType, attr: SceneType = {}) {
     super()
     this.setOption(attr)
     this.children = []
-    const background = new Background(backgroundProp)
-    background.parent = this
-    this.add(background)
+    if (backgroundProp) {
+      const background = new Background(backgroundProp)
+      background.parent = this
+      this.add(background)
+    }
   }
   get canvas() {
     return this._canvas

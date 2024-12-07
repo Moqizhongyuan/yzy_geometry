@@ -3,9 +3,11 @@ import GeometryMenu from './components/GeometryMenu'
 import UploadLocalImg from './components/UploadLocalImg'
 import { CursorType, Editor } from '@canvas/core/Editor'
 import style from './index.module.scss'
+import designImg from '@assets/design.png'
 
 const Detail = () => {
   const divRef = useRef<HTMLDivElement>(null)
+  const divRightRef = useRef<HTMLDivElement>(null)
   const cursor = useState<CursorType>('default')
   const [visible, setVisible] = useState(false)
   const [editor, setEditor] = useState<Editor>()
@@ -26,28 +28,33 @@ const Detail = () => {
         key: 'image',
         label: '图像',
         children: [
-          {
-            key: 'internetImg',
-            label: '上传线上图像'
-          },
+          // {
+          //   key: 'internetImg',
+          //   label: '上传线上图像'
+          // },
           {
             key: 'localImg',
             label: '上传本地图像'
           }
         ]
-      },
-      {
-        key: 'cancel',
-        label: '取消'
       }
+      // {
+      //   key: 'delete',
+      //   label: '清空画布'
+      // }
     ],
     ...localImgs
   ]
   useEffect(() => {
     const editor = new Editor(cursor)
-    editor.onMounted(divRef.current as HTMLDivElement)
-
+    editor.onMounted(
+      divRef.current as HTMLDivElement,
+      divRightRef.current as HTMLDivElement
+    )
     editor.editorScene.render()
+    const img = new Image()
+    img.src = designImg
+    editor.setDesignImg(designImg)
     setEditor(editor)
   }, [])
   return (
@@ -74,9 +81,10 @@ const Detail = () => {
         selectKeys={['']}
       />
       <div
-        className={`w-full h-full cursor-${cursor} ${style.canvas}`}
+        className={`flex-[3] h-full cursor-${cursor} ${style.canvas}`}
         ref={divRef}
       ></div>
+      <div ref={divRightRef} id="effect" className="flex-1"></div>
       <UploadLocalImg
         setLocalImgs={setLocalImgs}
         setVisible={setVisible}

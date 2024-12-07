@@ -4,7 +4,6 @@ import { Group, Rectangle, Img } from '../objects'
 import { Scene } from '../core'
 import { OrbitController, RectController } from '../controller'
 import { ImgController } from '../controller'
-// import { Vector2 } from '../math'
 import { selectObj } from '../utils'
 import { Vector2 } from '@canvas/math'
 
@@ -12,7 +11,7 @@ export type CursorType = 'none' | 'default' | 'pointer'
 
 class Editor extends EventDispatcher {
   /* 编辑器场景 */
-  editorScene = new Scene({ theme: 'coordinate', strokeStyle: '#333' })
+  editorScene = new Scene()
   /* 编辑器中的图案 */
   group = new Group()
   /* 图案控制器 */
@@ -28,6 +27,14 @@ class Editor extends EventDispatcher {
 
   designSize = 0
 
+  designImg = new Img({
+    index: 1000
+  })
+
+  resultScene = new Scene()
+
+  resultGroup = new Group()
+
   constructor(
     reactCursor: [CursorType, React.Dispatch<React.SetStateAction<CursorType>>]
   ) {
@@ -37,11 +44,14 @@ class Editor extends EventDispatcher {
       orbitController,
       group,
       imgController,
-      rectController
+      rectController,
+      designImg,
+      resultScene,
+      resultGroup
     } = this
     /* 编辑器场景*/
-    editorScene.add(group, imgController, rectController)
-
+    editorScene.add(group, imgController, rectController, designImg)
+    resultScene.add(resultGroup)
     this.cursor = reactCursor
 
     /* 渲染编辑器和虚拟场景 */
@@ -54,9 +64,53 @@ class Editor extends EventDispatcher {
     orbitController.addEventListener('change', () => {
       this.render()
     })
-    group.addEventListener('add', () => {
+    group.addEventListener('add', ({ obj }) => {
+      if (obj instanceof Img) {
+        const { image, position, rotate, scale, offset, size, uuid } = obj
+        resultGroup.add(
+          new Img({
+            image,
+            position,
+            rotate,
+            scale,
+            offset,
+            size,
+            uuid
+          })
+        )
+      }
       this.render()
     })
+    imgController.addEventListener('transformed', ({ obj }) => {
+      // const { size, rotate, scale, offset } = obj as Img
+      // const resultImg = resultGroup.children[group.children.indexOf(obj as Img)]
+      // if (resultImg instanceof Img) {
+      //   resultImg.setOption({
+      //     size,
+      //     rotate,
+      //     scale,
+      //     offset
+      //   })
+      // }
+    })
+    // 删除图案
+    group.addEventListener('remove', ({ obj }) => {
+      resultGroup.getObjectByProperty('uuid', (obj as Img).uuid)?.remove()
+    })
+  }
+
+  setDesignImg(src: string) {
+    const { designImg, designSize } = this
+    /* 图案尺寸随设计尺寸而定，位置居中 */
+    designImg.setOption({
+      src,
+      size: new Vector2(designSize),
+      offset: new Vector2(-designSize / 2)
+    })
+    /* 渲染 */
+    ;(designImg.image as HTMLImageElement).onload = () => {
+      this.editorScene.render()
+    }
   }
 
   addGeometry(geometry: HTMLImageElement | string) {
@@ -108,9 +162,11 @@ class Editor extends EventDispatcher {
     geometry.offset.set(-w / 2, -h / 2)
   }
 
-  onMounted(editorDom: HTMLDivElement) {
+  onMounted(editorDom: HTMLDivElement, effectDom: HTMLDivElement) {
     const {
-      editorScene: { canvas }
+      editorScene: { canvas },
+      resultScene: { canvas: resultCanvas },
+      resultGroup
     } = this
 
     /* 编辑器 */
@@ -121,6 +177,14 @@ class Editor extends EventDispatcher {
 
     const designSize = Math.min(dx, dy) * 0.5
     this.designSize = designSize
+
+    const { clientWidth: fx, clientHeight: fy } = effectDom
+    resultCanvas.width = fx
+    resultCanvas.height = fy
+    resultGroup.setOption({
+      scale: new Vector2(fx / designSize),
+      position: new Vector2(0, fx * 0.12)
+    })
 
     /* 编辑器事件监听 */
     canvas.addEventListener('pointerdown', this.pointerdown.bind(this))
@@ -253,6 +317,8 @@ class Editor extends EventDispatcher {
   /* 设计图和效果图的渲染 */
   render() {
     this.editorScene.render()
+    this.resultScene.render()
+    this.dispatchEvent({ type: 'render' })
   }
 }
 

@@ -65,6 +65,7 @@ class Background extends Object2D {
         ctx.fill()
         break
       case 'none':
+      default:
         break
     }
   }
