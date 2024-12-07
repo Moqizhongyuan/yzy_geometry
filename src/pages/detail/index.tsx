@@ -1,7 +1,8 @@
-import { useRef, useState } from 'react'
-import GeometryMenu, { MenuItem } from '@components/GeometryMenu'
-import { Img, Rectangle } from '@canvas/objects'
-import Canvas from './components/Canvas'
+import { useEffect, useRef, useState } from 'react'
+import GeometryMenu, { MenuItem } from './components/GeometryMenu'
+import UploadLocalImg from './components/UploadLocalImg'
+import { CursorType, Editor } from '@canvas/core/Editor'
+import style from './index.module.scss'
 
 const items: MenuItem[] = [
   {
@@ -30,33 +31,34 @@ const items: MenuItem[] = [
 
 type Geometry = 'rectangle' | 'image' | null
 
-type Drawer = {
-  geometry: Geometry
-  rects: Rectangle[]
-  imgs: Img[]
-}
-
 const Detail = () => {
-  const [geometry, setGeometry] = useState<Geometry>(null)
-  const drawer = useRef<Drawer>({
-    geometry: null,
-    rects: [],
-    imgs: []
-  })
+  const divRef = useRef<HTMLDivElement>(null)
+  const cursor = useState<CursorType>('default')
+  const [editor, setEditor] = useState<Editor>()
+  useEffect(() => {
+    const editor = new Editor(cursor)
+    editor.onMounted(divRef.current as HTMLDivElement)
+    editor.editorScene.render()
+    setEditor(editor)
+  }, [])
   return (
     <div className="flex h-full relative">
       <GeometryMenu
-        className="py-2"
         clickFn={e => {
           const geometry = e.key as Geometry
-          setGeometry(geometry)
-          drawer.current.geometry = geometry
+          switch (geometry) {
+            case 'rectangle':
+              editor?.addGeometry('rect')
+          }
         }}
         items={items}
-        selectKeys={[geometry ?? '']}
+        selectKeys={['']}
       />
-      <Canvas drawer={drawer} setGeometry={setGeometry} />
-      {/* <GeometryForm /> */}
+      <div
+        className={`w-full h-full cursor-${cursor} ${style.canvas}`}
+        ref={divRef}
+      ></div>
+      <UploadLocalImg />
     </div>
   )
 }

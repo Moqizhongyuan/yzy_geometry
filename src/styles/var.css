@@ -112,7 +112,7 @@
   --RY-c-brand-dark: var(--RY-c-green-dark);
   --RY-c-brand-darker: var(--RY-c-green-darker);
 
-  --RY-c-canvas: var(--RY-c-white-soft)
+  --RY-c-canvas: var(--RY-c-white)
 }
 
 .dark {

@@ -37,20 +37,34 @@ function crtPath(
   }
 }
 
-function selectObj(
-  group: Object2D[],
-  mp: Vector2,
-  scene: Scene
-): Img | Rectangle | null {
-  for (const item of [...group].reverse()) {
-    if (
-      (item instanceof Img || item instanceof Rectangle) &&
-      scene.isPointInObj(item, mp, item.pvmoMatrix)
-    ) {
-      return item
+// function selectObj(
+//   group: Object2D[],
+//   mp: Vector2,
+//   scene: Scene
+// ): Img | Rectangle | null {
+//   for (const item of [...group].reverse()) {
+//     if (
+//       (item instanceof Img || item instanceof Rectangle) &&
+//       scene.isPointInObj(item, mp, item.pvmoMatrix)
+//     ) {
+//       return item
+//     }
+//   }
+//   return null
+// }
+
+function selectObj(scene: Scene) {
+  return function (group: Object2D[], mp: Vector2) {
+    for (const item of [...group].reverse()) {
+      if (
+        (item instanceof Img || item instanceof Rectangle) &&
+        scene.isPointInObj(item, mp, item.pvmoMatrix)
+      ) {
+        return item
+      }
     }
+    return null
   }
-  return null
 }
 
 export { crtPathByMatrix, crtPath, selectObj }

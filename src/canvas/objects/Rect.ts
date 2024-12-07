@@ -1,8 +1,8 @@
 import { Matrix3, Vector2 } from '../math'
-import { Object2D } from '.'
+import { Object2D, Object2DType } from '.'
 import { crtPath, crtPathByMatrix } from '../utils'
 
-type RectType = {
+type RectType = Object2DType & {
   offset?: Vector2
   size?: Vector2
   isFill?: boolean
@@ -74,8 +74,11 @@ class Rectangle extends Object2D {
         vertices[i + 1] = y
       }
       ctx.restore()
+      ctx.save()
+      ctx.lineWidth = 2
       crtPath(ctx, vertices, true)
       ctx.stroke()
+      ctx.restore()
       ctx.save()
     }
   }

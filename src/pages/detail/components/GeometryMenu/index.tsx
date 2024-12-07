@@ -15,12 +15,12 @@ const GeometryMenu = ({
 }) => {
   return (
     <Menu
-      style={{ width: 200 }}
+      style={{ minWidth: 180, maxWidth: 180 }}
       mode="inline"
       onClick={clickFn}
       items={items}
       selectedKeys={selectKeys}
-      className={className}
+      className={`${className} py-2`}
     />
   )
 }

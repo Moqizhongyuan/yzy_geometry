@@ -42,7 +42,7 @@ class Background extends Object2D {
         break
       case 'coordinate':
         ctx.strokeStyle = this.strokeStyle
-        ctx.fillStyle = this.fillStyle
+        ctx.fillStyle = this.fillStyle ?? this.strokeStyle
         ctx.beginPath()
         ctx.moveTo(-width / 2, 0)
         ctx.lineTo(width / 2, 0)

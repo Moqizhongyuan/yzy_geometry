@@ -43,6 +43,8 @@ class Object2D extends EventDispatcher {
 
   fillStyle: string = 'black'
 
+  layerNum: number = 0
+
   // 类型
   readonly isObject2D = true
 
