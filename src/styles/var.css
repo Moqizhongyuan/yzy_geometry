@@ -112,7 +112,7 @@
   --RY-c-brand-dark: var(--RY-c-green-dark);
   --RY-c-brand-darker: var(--RY-c-green-darker);
 
-  --RY-c-canvas: var(--RY-c-white)
+  --RY-c-canvas: var(--RY-c-white);
 }
 
 .dark {
@@ -139,7 +139,7 @@
 
   --RY-c-text-code: var(--RY-c-indigo-lighter);
 
-  --RY-c-canvas: var(--RY-c-gray-light-3)
+  --RY-c-canvas: var(--RY-c-gray-light-3);
 }
 
 /**

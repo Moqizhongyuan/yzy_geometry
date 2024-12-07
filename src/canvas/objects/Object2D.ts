@@ -1,6 +1,6 @@
 import { Vector2 } from '../math'
 import { Group } from './Group'
-import { Scene } from '../core'
+import { Camera, Scene } from '../core'
 import { EventDispatcher } from '../core'
 import { Matrix3 } from '../math'
 import { generateUUID } from '../utils'
@@ -116,7 +116,7 @@ class Object2D extends EventDispatcher {
   }
 
   /* 绘图 */
-  draw(ctx: CanvasRenderingContext2D) {
+  draw(ctx: CanvasRenderingContext2D, _camera?: Camera) {
     if (!this.visible) {
       return
     }
@@ -124,12 +124,12 @@ class Object2D extends EventDispatcher {
     /*  矩阵变换 */
     this.transform(ctx)
     /* 绘制图形 */
-    this.drawShape(ctx)
+    this.drawShape(ctx, _camera)
     ctx.restore()
   }
 
   /* 绘制图形-接口 */
-  drawShape(ctx: CanvasRenderingContext2D) {
+  drawShape(ctx: CanvasRenderingContext2D, _camera?: Camera) {
     console.log(ctx)
   }
 

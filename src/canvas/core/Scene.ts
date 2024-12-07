@@ -74,7 +74,7 @@ class Scene extends Group {
         camera.transformInvert(ctx)
       }
       // 绘图
-      obj.draw(ctx)
+      obj.draw(ctx, camera)
       ctx.restore()
     }
     ctx.restore()
