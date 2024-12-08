@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import type { UploadProps } from 'antd'
 import { Upload } from 'antd'
 
@@ -14,7 +14,7 @@ const UploadLocalImg = ({
       Array<{
         key: string
         label: string
-        extra: React.ReactNode
+        extra: ReactElement
       }>
     >
   >
@@ -43,13 +43,15 @@ const UploadLocalImg = ({
       })
       Promise.all(fileReaders)
         .then(dataUrls => {
-          setLocalImgs(
-            dataUrls.map((item, index) => ({
-              key: `Img${index} ${item}`,
-              label: `Img${index}`,
-              extra: <img src={item} className="w-6 h-6" />
-            }))
-          )
+          setLocalImgs(prev => {
+            return prev.concat(
+              dataUrls.map((item, index) => ({
+                key: `Img${prev.length + index} ${item}`,
+                label: `Img${prev.length + index}`,
+                extra: <img src={item} className="w-6 h-6" />
+              }))
+            )
+          })
         })
         .catch(error => {
           console.error('Error reading files:', error)

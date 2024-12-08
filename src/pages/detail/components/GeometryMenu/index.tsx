@@ -1,5 +1,6 @@
 import { Menu, MenuProps } from 'antd'
 import MenuItem from 'antd/es/menu/MenuItem'
+import { ReactElement } from 'react'
 
 export type MenuItem = Required<MenuProps>['items'][number]
 
@@ -12,7 +13,7 @@ const GeometryMenu = ({
   localImgs: {
     key: string
     label: string
-    extra: React.ReactNode
+    extra: ReactElement
   }[]
   clickFn: MenuProps['onClick']
   selectKeys?: string[]
@@ -34,7 +35,15 @@ const GeometryMenu = ({
     {
       key: 'imgStorage',
       label: '图库',
-      children: [...localImgs]
+      children: [
+        ...[...Array(8)]
+          .map((_, index) => ({
+            key: `Img${index} /images/${index + 1}.png`,
+            label: `Img${index}`,
+            extra: <img src={`/images/${index + 1}.png`} className="w-6 h-6" />
+          }))
+          .concat(...localImgs)
+      ]
     }
   ]
   return (

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { ReactElement, useEffect, useRef, useState } from 'react'
 import GeometryMenu from './components/GeometryMenu'
 import UploadLocalImg from './components/UploadLocalImg'
 import { CursorType, Editor } from '@canvas/core/Editor'
@@ -16,7 +16,7 @@ const Detail = () => {
     Array<{
       key: string
       label: string
-      extra: React.ReactNode
+      extra: ReactElement
     }>
   >([])
   useEffect(() => {
