@@ -1,3 +1,22 @@
+# [2.0.0](https://github.com/Moqizhongyuan/yzy_geometry/compare/v1.1.0...v2.0.0) (2024-12-08)
+
+### Bug Fixes
+
+- 将rect类添加到group子元素中，解决了缩放画布线条失真的问题 ([bf27939](https://github.com/Moqizhongyuan/yzy_geometry/commit/bf27939bd47a6cf2e62e0d4b5acece3ac70e725f))
+- 解决了组件频繁刷新的问题 ([a7fbb8a](https://github.com/Moqizhongyuan/yzy_geometry/commit/a7fbb8ae175588817b79ffe2081ae89087aafdc3))
+- 修复了无背景模式下重复绘制矩形的bug ([0055ec7](https://github.com/Moqizhongyuan/yzy_geometry/commit/0055ec788305e8728db49f4c0f8b15f84b83cefb))
+
+### Features
+
+- 对绘图逻辑进行进一步抽取 ([12b72bd](https://github.com/Moqizhongyuan/yzy_geometry/commit/12b72bd3226de60fcf298d571db5b52ca31972b9))
+- 画布缩放基于鼠标位置 ([933085b](https://github.com/Moqizhongyuan/yzy_geometry/commit/933085bccb8c3ab3bfcb49f206d8c967b1ba60f3))
+- 加载本地图片 ([248a746](https://github.com/Moqizhongyuan/yzy_geometry/commit/248a74631fb8d1c7b0f74ce4dc37a448478c0789))
+- 可见切换 ([4ea9f2d](https://github.com/Moqizhongyuan/yzy_geometry/commit/4ea9f2d3e421d0cc69dbbbf4bbd22747800316b6))
+- 设置可见按钮样式 ([943e4f8](https://github.com/Moqizhongyuan/yzy_geometry/commit/943e4f8d45c1d9e56508b149b5ac7ae704701893))
+- 支持上传本地图片 ([a183401](https://github.com/Moqizhongyuan/yzy_geometry/commit/a183401f7d2dcbc85465325e18375db179e4cdbd))
+- 支持图层选中和变换 ([2f42cc3](https://github.com/Moqizhongyuan/yzy_geometry/commit/2f42cc3f8a4df776b878ae42ed0775154f6d2ad0))
+- 支持图层选中和删除 ([3f7c145](https://github.com/Moqizhongyuan/yzy_geometry/commit/3f7c14585993a74ffb95624688045a92fb9a1c58))
+
 # [1.1.0](https://github.com/Moqizhongyuan/yzy_geometry/compare/v1.0.0...v1.1.0) (2024-12-06)
 
 ### Bug Fixes
