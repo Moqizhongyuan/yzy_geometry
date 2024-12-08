@@ -8,6 +8,7 @@ export interface Layer {
   name: string
   uuid: string
   active: boolean
+  visible: boolean
 }
 
 const Layers = ({
@@ -65,7 +66,6 @@ const Layers = ({
   }
 
   const {
-    cursor,
     imgController,
     group,
     group: { children }
@@ -85,13 +85,16 @@ const Layers = ({
   }
 
   return (
-    <ul id="layer" className="flex-1 p-1 space-y-1 overflow-auto">
+    <ul
+      id="layer"
+      className={`flex-1 p-1 space-y-1 overflow-auto ${style.layerList}`}
+    >
       {layers.map((layer, index) => (
         <li
           className={cn(
-            'flex p-2 gap-2 cursor-pointer rounded-md',
+            'flex p-2 gap-2 cursor-pointer rounded-md items-center',
             { [style.active]: layer.active },
-            style.layerList
+            style.layerItem
           )}
           onClick={() => selectLayer(index)}
           key={layer.uuid}
@@ -102,7 +105,20 @@ const Layers = ({
           onDrop={e => drop(e, index)}
         >
           <img className="w-6 h-6" src={layer.src} />
-          {layer.name}
+          <div className="flex-1">{layer.name}</div>
+          <div
+            className="hover:bg-gray-500 mr-1 w-6 h-6 text-center rounded transition-all duration-300"
+            role="button"
+            onClick={e => {
+              e.preventDefault()
+            }}
+          >
+            {layer.visible ? (
+              <i className="fa-solid fa-eye" />
+            ) : (
+              <i className="fa-solid fa-circle" />
+            )}
+          </div>
         </li>
       ))}
     </ul>

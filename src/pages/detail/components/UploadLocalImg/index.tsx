@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react'
 import type { UploadProps } from 'antd'
 import { Upload } from 'antd'
+import style from './index.module.scss'
 
 const { Dragger } = Upload
 
@@ -64,7 +65,7 @@ const UploadLocalImg = ({
 
   return (
     <Dragger
-      className={`absolute right-0 w-[calc(100vw-180px)] h-full ${className}`}
+      className={`absolute right-0 w-[calc(100vw-180px)] opacity-80 h-full ${className} ${style.uploadImg}`}
       {...props}
     >
       <p className="ant-upload-drag-icon">

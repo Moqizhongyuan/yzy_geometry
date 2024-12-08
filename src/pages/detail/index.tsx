@@ -81,9 +81,10 @@ const Detail = () => {
             default:
               img.src = e.key.split(' ')[1]
               img.onload = () => {
-                const { uuid, name } = editor?.addGeometry(img) ?? {
+                const { uuid, name, visible } = editor?.addGeometry(img) ?? {
                   uuid: '',
-                  name: ''
+                  name: '',
+                  visible: true
                 }
                 setLayers(prev => {
                   const res = [...prev].map(item => {
@@ -94,7 +95,8 @@ const Detail = () => {
                     src: img.src,
                     active: true,
                     uuid,
-                    name
+                    name,
+                    visible
                   })
                   return res
                 })
