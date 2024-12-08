@@ -1,0 +1,9 @@
+.layerList {
+  background-color: var(--RY-c-brand-darker);
+  &.active {
+    background-color: var(--RY-c-brand-lighter);
+  }
+  &:hover {
+    background-color: var(--RY-c-brand);
+  }
+}

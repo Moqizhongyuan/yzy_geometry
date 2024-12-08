@@ -314,6 +314,22 @@ class Editor extends EventDispatcher {
     }
   }
 
+  selectImgByUUID(uuid: string) {
+    const { group, imgController } = this
+    const obj = group.getObjectByProperty('uuid', uuid)
+    if (obj instanceof Img) {
+      imgController.img = obj
+    }
+  }
+
+  replaceImg(a: number, b: number) {
+    const { group, resultGroup } = this
+    for (const { children } of [group, resultGroup]) {
+      ;[children[a], children[b]] = [children[b], children[a]]
+    }
+    this.render()
+  }
+
   /* 设计图和效果图的渲染 */
   render() {
     this.editorScene.render()

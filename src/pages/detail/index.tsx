@@ -12,7 +12,7 @@ const Detail = () => {
   const cursor = useRef<CursorType>('default')
   const [layers, setLayers] = useState<Layer[]>([])
   const [visible, setVisible] = useState(false)
-  const [editor, setEditor] = useState<Editor>()
+  const [editor, setEditor] = useState<Editor>(new Editor(cursor))
   const [localImgs, setLocalImgs] = useState<
     Array<{
       key: string
@@ -21,7 +21,6 @@ const Detail = () => {
     }>
   >([])
   useEffect(() => {
-    const editor = new Editor(cursor)
     const effectImgData: Array<{
       src: string
       globalCompositeOperation: GlobalCompositeOperation
@@ -64,7 +63,7 @@ const Detail = () => {
       editor.onUnmounted()
       effector.onUnmounted()
     }
-  }, [])
+  }, [editor])
   return (
     <div className="flex h-full relative">
       <GeometryMenu
@@ -87,18 +86,17 @@ const Detail = () => {
                   name: ''
                 }
                 setLayers(prev => {
-                  prev
-                    .map(item => {
-                      item.active = false
-                      return item
-                    })
-                    .unshift({
-                      src: img.src,
-                      active: true,
-                      uuid,
-                      name
-                    })
-                  return prev
+                  const res = [...prev].map(item => {
+                    item.active = false
+                    return item
+                  })
+                  res.unshift({
+                    src: img.src,
+                    active: true,
+                    uuid,
+                    name
+                  })
+                  return res
                 })
               }
           }
@@ -115,7 +113,7 @@ const Detail = () => {
           id="effect"
           className={`${style.canvas} h-[300px] w-[300px]`}
         ></div>
-        <Layers layers={layers} />
+        <Layers editor={editor} layers={layers} setLayers={setLayers} />
       </div>
       <UploadLocalImg
         setLocalImgs={setLocalImgs}
