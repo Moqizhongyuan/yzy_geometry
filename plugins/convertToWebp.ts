@@ -7,6 +7,7 @@ import { Plugin } from 'vite'
 export function convertToWebpPlugin(options = {}): Plugin {
   return {
     name: 'vite-plugin-webp-convert',
+    apply: 'build',
     async buildStart() {
       const srcDir = path.resolve(__dirname, '../public/images')
       // 读取 srcDir 目录中的所有 .jpg 文件

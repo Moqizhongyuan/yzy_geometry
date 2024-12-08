@@ -1,13 +1,12 @@
-// import { useState } from 'react'
+export interface Layer {
+  src: string
+  name: string
+  uuid: string
+  active: boolean
+}
 
-// interface Layer {
-//   src: string
-//   name: string
-//   uuid: string
-//   active: boolean
-// }
-const Layers = () => {
-  // const [layers, setLayers] = useState<Layer[]>([])
+const Layers = ({ layers }: { layers: Layer[] }) => {
+  console.log(layers)
   return (
     <div id="layer" className="flex-1">
       {/* {layers.map((item, index) => (

@@ -53,7 +53,7 @@ const GeometryMenu = ({
       onClick={clickFn}
       items={menuItems}
       selectedKeys={selectKeys}
-      className={`${className} py-2`}
+      className={`${className} py-2 overflow-auto`}
     />
   )
 }

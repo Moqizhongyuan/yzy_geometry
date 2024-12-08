@@ -4,12 +4,13 @@ import UploadLocalImg from './components/UploadLocalImg'
 import { CursorType, Editor } from '@canvas/core/Editor'
 import style from './index.module.scss'
 import { Effector } from '@canvas/core/Effector'
-import Layers from './components/Layers'
+import Layers, { Layer } from './components/Layers'
 
 const Detail = () => {
   const divRef = useRef<HTMLDivElement>(null)
   const divRightRef = useRef<HTMLDivElement>(null)
-  const cursor = useState<CursorType>('default')
+  const cursor = useRef<CursorType>('default')
+  const [layers, setLayers] = useState<Layer[]>([])
   const [visible, setVisible] = useState(false)
   const [editor, setEditor] = useState<Editor>()
   const [localImgs, setLocalImgs] = useState<
@@ -81,14 +82,31 @@ const Detail = () => {
             default:
               img.src = e.key.split(' ')[1]
               img.onload = () => {
-                editor?.addGeometry(img)
+                const { uuid, name } = editor?.addGeometry(img) ?? {
+                  uuid: '',
+                  name: ''
+                }
+                setLayers(prev => {
+                  prev
+                    .map(item => {
+                      item.active = false
+                      return item
+                    })
+                    .unshift({
+                      src: img.src,
+                      active: true,
+                      uuid,
+                      name
+                    })
+                  return prev
+                })
               }
           }
         }}
         selectKeys={['']}
       />
       <div
-        className={`flex-1 h-full cursor-${cursor} ${style.canvas}`}
+        className={`flex-1 h-full cursor-${cursor.current} ${style.canvas}`}
         ref={divRef}
       ></div>
       <div id="right" className="h-full flex flex-col">
@@ -97,7 +115,7 @@ const Detail = () => {
           id="effect"
           className={`${style.canvas} h-[300px] w-[300px]`}
         ></div>
-        <Layers />
+        <Layers layers={layers} />
       </div>
       <UploadLocalImg
         setLocalImgs={setLocalImgs}

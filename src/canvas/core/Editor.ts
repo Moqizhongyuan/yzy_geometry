@@ -6,6 +6,7 @@ import { OrbitController, RectController } from '../controller'
 import { ImgController } from '../controller'
 import { selectObj } from '../utils'
 import { Vector2 } from '@canvas/math'
+import { MutableRefObject } from 'react'
 
 export type CursorType = 'none' | 'default' | 'pointer'
 
@@ -23,7 +24,7 @@ class Editor extends EventDispatcher {
   /* 鼠标划入的图形 */
   objHover: Object2D | null = null
   /* 鼠标状态 */
-  cursor: [CursorType, React.Dispatch<React.SetStateAction<CursorType>>]
+  cursor: MutableRefObject<CursorType>
 
   designSize = 0
 
@@ -35,9 +36,7 @@ class Editor extends EventDispatcher {
 
   resultGroup = new Group()
 
-  constructor(
-    reactCursor: [CursorType, React.Dispatch<React.SetStateAction<CursorType>>]
-  ) {
+  constructor(reactCursor: MutableRefObject<CursorType>) {
     super()
     const {
       editorScene,
@@ -307,11 +306,11 @@ class Editor extends EventDispatcher {
   updateMouseCursor() {
     const { imgController, cursor, objHover } = this
     if (imgController.mouseState) {
-      cursor[1]('none')
+      cursor.current = 'none'
     } else if (objHover) {
-      cursor[1]('pointer')
+      cursor.current = 'pointer'
     } else {
-      cursor[1]('default')
+      cursor.current = 'default'
     }
   }
 
