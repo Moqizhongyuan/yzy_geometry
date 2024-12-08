@@ -322,6 +322,18 @@ class Editor extends EventDispatcher {
     }
   }
 
+  setVisibleByUUID(uuid: string) {
+    const { group } = this
+    const obj = group.getObjectByProperty('uuid', uuid)
+    if (obj instanceof Img) {
+      obj.setOption({ visible: !obj.visible })
+      ;(
+        this.resultGroup.children[group.children.indexOf(obj)] as Img
+      ).setOption({ visible: obj.visible })
+      this.render()
+    }
+  }
+
   replaceImg(a: number, b: number) {
     const { group, resultGroup } = this
     for (const { children } of [group, resultGroup]) {

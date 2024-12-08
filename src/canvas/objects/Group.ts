@@ -136,6 +136,7 @@ class Group extends Object2D {
     const { children } = this
     /* 绘制子对象 */
     for (const obj of children) {
+      if (!obj.visible) continue
       if (obj.enableCamera) {
         obj.draw(ctx)
       } else {

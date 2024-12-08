@@ -110,7 +110,17 @@ const Layers = ({
             className="hover:bg-gray-500 mr-1 w-6 h-6 text-center rounded transition-all duration-300"
             role="button"
             onClick={e => {
-              e.preventDefault()
+              e.stopPropagation()
+              editor.setVisibleByUUID(layer.uuid)
+              setLayers(prev => {
+                const res = [...prev]
+                res.map((l, i) => {
+                  if (i === index) {
+                    l.visible = !l.visible
+                  }
+                })
+                return res
+              })
             }}
           >
             {layer.visible ? (
