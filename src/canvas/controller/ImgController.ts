@@ -80,7 +80,7 @@ class ImgController extends Object2D {
       this.imgTransformer.setOption({ img: val })
       this.imgTransformer.passImgDataTo(this.controlStage)
       this.frame.img = val
-      this.dispatchEvent({ type: 'selected', img: val })
+      this.dispatchEvent({ type: 'selected', obj: val })
     } else {
       this.mouseState = null
       this.controlState = null

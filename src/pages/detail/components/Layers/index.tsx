@@ -1,6 +1,7 @@
 import { Editor } from '@canvas/core/Editor'
 import style from './index.module.scss'
 import cn from 'classnames'
+import { Img } from '@canvas/objects'
 
 export interface Layer {
   src: string
@@ -61,6 +62,26 @@ const Layers = ({
     /* 置换图案 */
     const len = layers.length - 1
     editor.replaceImg(len - dragIndex, len - index)
+  }
+
+  const {
+    cursor,
+    imgController,
+    group,
+    group: { children }
+  } = editor
+  imgController.addEventListener('selected', ({ obj }) => {
+    // 更新图层选择状态
+    activateLayer(children.length - 1 - children.indexOf(obj as Img))
+  })
+
+  group.addEventListener('remove', ({ obj }) => {
+    // 删除图层
+    removeLayer((obj as Img).uuid)
+  })
+  /* 删除图层 */
+  function removeLayer(uuid: string) {
+    setLayers(prev => [...prev].filter(item => item.uuid !== uuid))
   }
 
   return (
