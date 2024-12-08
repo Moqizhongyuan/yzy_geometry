@@ -81,7 +81,7 @@ class RectController extends Object2D {
       this.rectTransformer.setOption({ rect: val })
       this.rectTransformer.passRectDataTo(this.controlStage)
       this.frame.rect = val
-      this.dispatchEvent({ type: 'selected', rect: val })
+      this.dispatchEvent({ type: 'selected', obj: val })
     } else {
       this.mouseState = null
       this.controlState = null
@@ -196,7 +196,7 @@ class RectController extends Object2D {
     if (controlState) {
       rectTransformer[(controlState + Number(shiftKey)) as Control]()
     }
-    this.dispatchEvent({ type: 'transformed', rect })
+    this.dispatchEvent({ type: 'transformed', obj: rect })
   }
 
   draw(ctx: CanvasRenderingContext2D) {

@@ -195,7 +195,7 @@ class ImgController extends Object2D {
     if (controlState) {
       imgTransformer[(controlState + Number(shiftKey)) as Control]()
     }
-    this.dispatchEvent({ type: 'transformed', img })
+    this.dispatchEvent({ type: 'transformed', obj: img })
   }
 
   draw(ctx: CanvasRenderingContext2D) {

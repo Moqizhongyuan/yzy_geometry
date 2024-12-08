@@ -82,16 +82,17 @@ class Editor extends EventDispatcher {
       this.render()
     })
     imgController.addEventListener('transformed', ({ obj }) => {
-      // const { size, rotate, scale, offset } = obj as Img
-      // const resultImg = resultGroup.children[group.children.indexOf(obj as Img)]
-      // if (resultImg instanceof Img) {
-      //   resultImg.setOption({
-      //     size,
-      //     rotate,
-      //     scale,
-      //     offset
-      //   })
-      // }
+      const { position, rotate, scale, offset, size } = obj as Img
+      const resultImg = resultGroup.children[group.children.indexOf(obj as Img)]
+      if (resultImg instanceof Img) {
+        resultImg.setOption({
+          position,
+          rotate,
+          scale,
+          offset,
+          size
+        })
+      }
     })
     // 删除图案
     group.addEventListener('remove', ({ obj }) => {
@@ -135,7 +136,7 @@ class Editor extends EventDispatcher {
       /* 添加图案 */
       this.group.add(img)
       /* 选择图案 */
-      this.imgController.obj = img
+      this.imgController.img = img
       return img
     } else if (geometry === 'rect') {
       const rect = new Rectangle({ layerNum, name: '图层' + layerNum })
@@ -157,7 +158,7 @@ class Editor extends EventDispatcher {
     }
     const { designSize } = this
     const w = designSize * ratio
-    const h = (w * width) / height
+    const h = (w * height) / width
     geometry.size.set(w, h)
     geometry.offset.set(-w / 2, -h / 2)
   }

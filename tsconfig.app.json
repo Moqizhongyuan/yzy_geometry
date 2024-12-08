@@ -30,5 +30,5 @@
       "@constants/*": ["src/constants/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "plugins"]
 }
