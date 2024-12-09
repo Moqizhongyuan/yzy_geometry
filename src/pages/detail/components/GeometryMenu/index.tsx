@@ -1,4 +1,4 @@
-import { Menu, MenuProps } from 'antd'
+import { Input, Menu, MenuProps } from 'antd'
 import MenuItem from 'antd/es/menu/MenuItem'
 import { ReactElement } from 'react'
 
@@ -8,7 +8,9 @@ const GeometryMenu = ({
   localImgs,
   clickFn,
   selectKeys,
-  className
+  className,
+  setText,
+  text
 }: {
   localImgs: {
     key: string
@@ -18,6 +20,8 @@ const GeometryMenu = ({
   clickFn: MenuProps['onClick']
   selectKeys?: string[]
   className?: string
+  setText: React.Dispatch<React.SetStateAction<string>>
+  text: string
 }) => {
   const menuItems = [
     // {
@@ -30,7 +34,17 @@ const GeometryMenu = ({
       children: [
         {
           key: 'aaa',
-          label: 'aaa'
+          label: '',
+          extra: (
+            <Input
+              placeholder="请输入文字"
+              onClick={e => e.stopPropagation()}
+              value={text}
+              onChange={e => {
+                setText(e.target.value)
+              }}
+            />
+          )
         }
       ]
     },
@@ -54,7 +68,7 @@ const GeometryMenu = ({
   ]
   return (
     <Menu
-      style={{ minWidth: 180, maxWidth: 180 }}
+      style={{ minWidth: 256, maxWidth: 256 }}
       mode="inline"
       onClick={clickFn}
       items={menuItems}

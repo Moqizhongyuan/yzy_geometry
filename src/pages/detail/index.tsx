@@ -21,6 +21,7 @@ const Detail = () => {
       extra: ReactElement
     }>
   >([])
+  const [text, setText] = useState<string>('')
   useEffect(() => {
     const effectImgData: Array<{
       src: string
@@ -68,18 +69,20 @@ const Detail = () => {
   return (
     <div className="flex h-full relative">
       <GeometryMenu
+        text={text}
+        setText={setText}
         localImgs={localImgs}
         clickFn={e => {
           const geometry = e.key
           let obj: Img | Text
           const img = new Image()
-          const text = new Text({
-            text: 'aaa',
-            style: { fillStyle: '#432' }
+          const text2D = new Text({
+            text,
+            style: { fillStyle: '#000' }
           })
           switch (geometry) {
             case 'aaa':
-              obj = editor?.addGeometry(text) as Text
+              obj = editor?.addGeometry(text2D) as Text
               setLayers(prev => {
                 const res = [...prev].map(item => {
                   item.active = false
