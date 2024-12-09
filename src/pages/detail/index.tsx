@@ -5,6 +5,7 @@ import { CursorType, Editor } from '@canvas/core/Editor'
 import style from './index.module.scss'
 import { Effector } from '@canvas/core/Effector'
 import Layers, { Layer } from './components/Layers'
+import { Img, Text } from '@canvas/objects'
 
 const Detail = () => {
   const divRef = useRef<HTMLDivElement>(null)
@@ -70,10 +71,29 @@ const Detail = () => {
         localImgs={localImgs}
         clickFn={e => {
           const geometry = e.key
+          let obj: Img | Text
           const img = new Image()
+          const text = new Text({
+            text: 'aaa',
+            style: { fillStyle: '#432' }
+          })
           switch (geometry) {
             case 'aaa':
-              editor?.addGeometry('text', 'aaa')
+              obj = editor?.addGeometry(text) as Text
+              setLayers(prev => {
+                const res = [...prev].map(item => {
+                  item.active = false
+                  return item
+                })
+                res.unshift({
+                  src: img.src,
+                  active: true,
+                  uuid: obj.uuid,
+                  name: obj.name,
+                  visible: obj.visible
+                })
+                return res
+              })
               break
             case 'localImg':
               setVisible(!visible)

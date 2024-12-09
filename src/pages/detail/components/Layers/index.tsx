@@ -103,7 +103,12 @@ const Layers = ({
           onDragStart={e => dragstart(e, index)}
           onDrop={e => drop(e, index)}
         >
-          <img className="w-6 h-6" src={layer.src} />
+          {
+            <img
+              className={`w-6 h-6 ${layer.src ? '' : 'opacity-0'}`}
+              src={layer.src}
+            />
+          }
           <div className="flex-1">{layer.name}</div>
           <div
             className="hover:bg-gray-500 mr-1 w-6 h-6 text-center rounded transition-all duration-300"

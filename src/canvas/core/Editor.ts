@@ -45,6 +45,8 @@ class Editor extends EventDispatcher {
       resultGroup
     } = this
     /* 编辑器场景*/
+    group.name = 'editorGroup'
+    resultGroup.name = 'resultGroup'
     editorScene.add(group, controller, designImg)
     resultScene.add(resultGroup)
     this.cursor = reactCursor
@@ -70,25 +72,38 @@ class Editor extends EventDispatcher {
             uuid
           })
         )
+      } else if (obj instanceof Text) {
+        const { position, rotate, scale, offset, uuid, text, style } = obj
+        resultGroup.add(
+          new Text({ position, rotate, scale, offset, uuid, text, style })
+        )
       }
       this.render()
     })
     controller.addEventListener('transformed', ({ obj }) => {
-      const { position, rotate, scale, offset, size } = obj as Img
-      const resultImg = resultGroup.children[group.children.indexOf(obj as Img)]
-      if (resultImg instanceof Img) {
-        resultImg.setOption({
+      const { position, rotate, scale, offset, size } = obj as Object2D
+      const resultObj =
+        resultGroup.children[group.children.indexOf(obj as Object2D)]
+      if (resultObj instanceof Img) {
+        resultObj.setOption({
           position,
           rotate,
           scale,
           offset,
           size
         })
+      } else if (resultObj instanceof Text) {
+        resultObj.setOption({
+          position,
+          rotate,
+          scale,
+          offset
+        })
       }
     })
     // 删除图案
     group.addEventListener('remove', ({ obj }) => {
-      resultGroup.getObjectByProperty('uuid', (obj as Img).uuid)?.remove()
+      resultGroup.getObjectByProperty('uuid', (obj as Object2D).uuid)?.remove()
     })
   }
 
@@ -106,7 +121,7 @@ class Editor extends EventDispatcher {
     }
   }
 
-  addGeometry(geometry: HTMLImageElement | string, textString?: string) {
+  addGeometry(geometry: HTMLImageElement | Text) {
     const {
       group: { children }
     } = this
@@ -130,8 +145,14 @@ class Editor extends EventDispatcher {
       /* 选择图案 */
       this.controller.obj = img
       return img
-    } else if (geometry === 'text') {
-      const text = new Text({ text: textString, style: { fillStyle: '#333' } })
+    } else if (geometry instanceof Text) {
+      const text = new Text({
+        layerNum,
+        name: '图层' + layerNum,
+        text: geometry.text,
+        style: geometry.style,
+        maxWidth: geometry.maxWidth
+      })
       this.setGeometry2DSize(text, 0.5)
       this.group.add(text)
       this.controller.obj = text
@@ -140,18 +161,17 @@ class Editor extends EventDispatcher {
   }
 
   setGeometry2DSize(geometry: Img | Text, ratio: number) {
-    let width = 0,
-      height = 0
+    const { designSize } = this
     if (geometry instanceof Img) {
-      width = (geometry.image as HTMLImageElement).width
-      height = (geometry.image as HTMLImageElement).height
-      const { designSize } = this
+      const width = (geometry.image as HTMLImageElement).width
+      const height = (geometry.image as HTMLImageElement).height
       const w = designSize * ratio
       const h = (w * height) / width
       geometry.size.set(w, h)
       geometry.offset.set(-w / 2, -h / 2)
     } else if (geometry instanceof Text) {
-      geometry.offset.set(-geometry.size.width / 2, -geometry.size.height / 2)
+      geometry.scale.set(designSize / geometry.size.height / 5)
+      geometry.offset.set(0, 0)
     }
   }
 
@@ -297,11 +317,11 @@ class Editor extends EventDispatcher {
   setVisibleByUUID(uuid: string) {
     const { group } = this
     const obj = group.getObjectByProperty('uuid', uuid)
-    if (obj instanceof Img) {
+    if (obj instanceof Object2D) {
       obj.setOption({ visible: !obj.visible })
-      ;(
-        this.resultGroup.children[group.children.indexOf(obj)] as Img
-      ).setOption({ visible: obj.visible })
+      this.resultGroup.children[group.children.indexOf(obj)].setOption({
+        visible: obj.visible
+      })
       this.render()
     }
   }
