@@ -27,14 +27,5 @@ class Camera {
     ctx.translate(-x, -y)
     ctx.scale(scale, scale)
   }
-
-  reverseTransformInvert(ctx: CanvasRenderingContext2D) {
-    const {
-      position: { x, y },
-      zoom
-    } = this
-    ctx.scale(zoom, zoom)
-    ctx.translate(x, y)
-  }
 }
 export { Camera }

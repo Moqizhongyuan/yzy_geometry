@@ -72,9 +72,9 @@ const Detail = () => {
           const geometry = e.key
           const img = new Image()
           switch (geometry) {
-            // case 'rectangle':
-            //   // editor?.addGeometry('rect')
-            //   break
+            case 'aaa':
+              editor?.addGeometry('text', 'aaa')
+              break
             case 'localImg':
               setVisible(!visible)
               break

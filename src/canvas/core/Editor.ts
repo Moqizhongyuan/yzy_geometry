@@ -1,5 +1,5 @@
 import { EventDispatcher } from '../core'
-import { Object2D, Group, Rectangle, Img } from '../objects'
+import { Object2D, Group, Img, Text } from '../objects'
 import { Scene } from '../core'
 import { OrbitController, TransformController } from '../controller'
 import { selectObj } from '../utils'
@@ -10,7 +10,7 @@ export type CursorType = 'none' | 'default' | 'pointer'
 
 class Editor extends EventDispatcher {
   /* 编辑器场景 */
-  editorScene = new Scene()
+  editorScene = new Scene({ theme: 'coordinate' })
   /* 编辑器中的图案 */
   group = new Group()
   /* 控制器 */
@@ -106,7 +106,7 @@ class Editor extends EventDispatcher {
     }
   }
 
-  addGeometry(geometry: HTMLImageElement | string) {
+  addGeometry(geometry: HTMLImageElement | string, textString?: string) {
     const {
       group: { children }
     } = this
@@ -130,29 +130,29 @@ class Editor extends EventDispatcher {
       /* 选择图案 */
       this.controller.obj = img
       return img
-    } else if (geometry === 'rect') {
-      const rect = new Rectangle({ layerNum, name: '图层' + layerNum })
-      this.setGeometry2DSize(rect, 0.5)
-      this.group.add(rect)
-      return rect
+    } else if (geometry === 'text') {
+      const text = new Text({ text: textString, style: { fillStyle: '#333' } })
+      this.setGeometry2DSize(text, 0.5)
+      this.group.add(text)
+      this.controller.obj = text
+      return text
     }
   }
 
-  setGeometry2DSize(geometry: Img | Rectangle, ratio: number) {
+  setGeometry2DSize(geometry: Img | Text, ratio: number) {
     let width = 0,
       height = 0
     if (geometry instanceof Img) {
       width = (geometry.image as HTMLImageElement).width
       height = (geometry.image as HTMLImageElement).height
-    } else {
-      width = 200
-      height = 200
+      const { designSize } = this
+      const w = designSize * ratio
+      const h = (w * height) / width
+      geometry.size.set(w, h)
+      geometry.offset.set(-w / 2, -h / 2)
+    } else if (geometry instanceof Text) {
+      geometry.offset.set(-geometry.size.width / 2, -geometry.size.height / 2)
     }
-    const { designSize } = this
-    const w = designSize * ratio
-    const h = (w * height) / width
-    geometry.size.set(w, h)
-    geometry.offset.set(-w / 2, -h / 2)
   }
 
   onMounted(editorDom: HTMLDivElement, effectDom: HTMLDivElement) {

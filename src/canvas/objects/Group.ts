@@ -1,4 +1,3 @@
-import { Camera } from '@canvas/core'
 import { Object2D, Object2DType } from './Object2D'
 
 class Group extends Object2D {
@@ -132,16 +131,16 @@ class Group extends Object2D {
   }
 
   /* 绘图 */
-  drawShape(ctx: CanvasRenderingContext2D, camera: Camera) {
+  drawShape(ctx: CanvasRenderingContext2D) {
     const { children } = this
     /* 绘制子对象 */
     for (const obj of children) {
       if (!obj.visible) continue
-      if (obj.enableCamera) {
-        obj.draw(ctx)
-      } else {
-        obj.draw(ctx, camera)
-      }
+      // if (obj.enableCamera) {
+      obj.draw(ctx)
+      // } else {
+      // obj.draw(ctx, camera)
+      // }
     }
   }
 }

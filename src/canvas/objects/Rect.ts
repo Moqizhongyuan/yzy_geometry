@@ -1,6 +1,5 @@
 import { Matrix3, Vector2 } from '../math'
 import { Object2D, Object2DType } from '.'
-import { crtPath, crtPathByMatrix } from '../utils'
 import { Camera } from '@canvas/core'
 
 type RectType = Object2DType & {
@@ -46,52 +45,10 @@ class Rectangle extends Object2D {
     return this.pvmMatrix.multiply(new Matrix3().makeTranslation(x, y))
   }
 
-  draw(ctx: CanvasRenderingContext2D, camera: Camera): void {
-    if (!this.visible) {
-      return
-    }
-    ctx.save()
-    ctx.beginPath()
-    camera.reverseTransformInvert(ctx)
-    const {
-      offset: { x, y },
-      size: { width, height }
-    } = this
-    if (this.isFill) {
-      ctx.fillRect(x, y, width, height)
-    }
-    if (this.isStroke) {
-      const vertices = [
-        x,
-        y,
-        x + width,
-        y,
-        x + width,
-        y + height,
-        x,
-        y + height
-      ]
-      for (let i = 0, len = vertices.length; i < len; i += 2) {
-        const { x, y } = new Vector2(vertices[i], vertices[i + 1]).applyMatrix3(
-          this.pvmMatrix
-        )
-        vertices[i] = x
-        vertices[i + 1] = y
-      }
-      ctx.lineWidth = 2 / camera.zoom
-      crtPath(ctx, vertices, true)
-      ctx.stroke()
-    }
-    ctx.restore()
-  }
+  draw(ctx: CanvasRenderingContext2D, camera: Camera): void {}
 
   /* 绘制图像边界 */
-  crtPath(ctx: CanvasRenderingContext2D, matrix = this.pvmoMatrix) {
-    const {
-      size: { x: imgW, y: imgH }
-    } = this
-    crtPathByMatrix(ctx, [0, 0, imgW, 0, imgW, imgH, 0, imgH], matrix, true)
-  }
+  crtPath(ctx: CanvasRenderingContext2D, matrix = this.pvmMatrix) {}
 }
 
 export { Rectangle }

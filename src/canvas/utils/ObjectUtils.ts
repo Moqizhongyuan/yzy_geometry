@@ -1,8 +1,7 @@
 import { Scene } from '../core'
-import { Rectangle } from '../objects'
 import { Matrix3 } from '../math'
 import { Vector2 } from '../math'
-import { Img, Object2D } from '../objects'
+import { Object2D } from '../objects'
 
 function crtPathByMatrix(
   ctx: CanvasRenderingContext2D,

@@ -32,7 +32,7 @@ const baselineRatio = {
   ideographic: -1
 }
 
-class Text2D extends Object2D {
+class Text extends Object2D {
   text = ''
   maxWidth: number | undefined
   style: TextStyle = new TextStyle()
@@ -114,4 +114,4 @@ class Text2D extends Object2D {
   }
 }
 
-export { Text2D }
+export { Text }

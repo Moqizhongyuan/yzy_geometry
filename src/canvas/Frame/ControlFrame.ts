@@ -126,7 +126,9 @@ class ControlFrame {
     const {
       obj: {
         size,
-        offset: { x: ox, y: oy }
+        boundingBox: {
+          min: { x: ox, y: oy }
+        }
       },
       clipVertices: fv,
       clipCenter,
