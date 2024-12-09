@@ -31,6 +31,10 @@ class BasicStyle {
   // 裁剪
   clip = false
 
+  constructor(attr: BasicStyleType = {}) {
+    this.setOption(attr)
+  }
+
   /* 设置样式 */
   setOption(attr: BasicStyleType = {}) {
     Object.assign(this, attr)
