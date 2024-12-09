@@ -83,7 +83,7 @@ const Detail = () => {
           })
           const rect2D = new Rectangle({
             size: new Vector2(200, 200),
-            style: { strokeStyle: '#333', lineWidth: 2 }
+            style: { strokeStyle: '#333', lineWidth: 2, fillStyle: '#325' }
           })
           switch (geometry) {
             case 'rectangle':

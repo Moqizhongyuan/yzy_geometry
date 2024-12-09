@@ -1,10 +1,10 @@
-import { Vector2 } from '../math/Vector2'
+import { Vector2 } from '../math'
 import { Group } from './Group'
-import { Scene } from '../core/Scene'
-import { EventDispatcher } from '../core/EventDispatcher'
-import { Matrix3 } from '../math/Matrix3'
+import { Scene } from '../core'
+import { EventDispatcher } from '../core'
+import { Matrix3 } from '../math'
 import { generateUUID } from '../utils'
-import { Camera } from '@canvas/core'
+import { Camera } from '../core'
 
 export type Object2DType = {
   position?: Vector2

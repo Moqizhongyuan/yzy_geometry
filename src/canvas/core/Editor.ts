@@ -10,7 +10,7 @@ export type CursorType = 'none' | 'default' | 'pointer'
 
 class Editor extends EventDispatcher {
   /* 编辑器场景 */
-  editorScene = new Scene({ theme: 'coordinate' })
+  editorScene = new Scene()
   /* 编辑器中的图案 */
   group = new Group()
   /* 控制器 */
@@ -78,10 +78,10 @@ class Editor extends EventDispatcher {
           new Text({ position, rotate, scale, offset, uuid, text, style })
         )
       } else if (obj instanceof Rectangle) {
-        // const { position, rotate, scale, offset, uuid, style, size } = obj
-        // resultGroup.add(
-        //   new Rectangle({ position, rotate, scale, offset, uuid, style, size })
-        // )
+        const { position, rotate, scale, offset, uuid, style, size } = obj
+        resultGroup.add(
+          new Rectangle({ position, rotate, scale, offset, uuid, style, size })
+        )
       }
       this.render()
     })

@@ -1,4 +1,4 @@
-import { BasicStyle, BasicStyleType } from './BasicStyle'
+import { BasicStyle, BasicStyleType } from '.'
 
 /* 绘图顺序 */
 type OrderType = 0 | 1

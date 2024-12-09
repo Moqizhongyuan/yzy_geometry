@@ -1,8 +1,7 @@
 import { Vector2 } from '../math'
 import { Object2D, Object2DType } from '.'
 import { crtPath, crtPathByMatrix } from '../utils'
-import { BasicStyleType } from '@canvas/style'
-import { StandStyle, StandStyleType } from '@canvas/style/StandStyle'
+import { StandStyle, StandStyleType, BasicStyleType } from '../style'
 
 type RectType = Object2DType & {
   offset?: Vector2
@@ -15,6 +14,7 @@ class Rectangle extends Object2D {
   offset: Vector2 = new Vector2()
   size: Vector2 = new Vector2(300, 150)
   style: StandStyle = new StandStyle()
+  enableCamera: boolean = false
 
   // 类型
   readonly isImg = true
@@ -44,11 +44,13 @@ class Rectangle extends Object2D {
 
   /* 绘图 */
   draw(ctx: CanvasRenderingContext2D): void {
+    this.computeBoundingBox()
     const {
       boundingBox: {
         min: { x: x0, y: y0 },
         max: { x: x1, y: y1 }
       },
+      size: { width: w, height: h },
       style
     } = this
     const lv = [x0, y0, x0, y1, x1, y1, x1, y0]
@@ -59,9 +61,16 @@ class Rectangle extends Object2D {
     }
     ctx.save()
     style.apply(ctx)
-    ctx.beginPath()
-    crtPath(ctx, lv, true)
-    ctx.stroke()
+    if (this.strokeStyle) {
+      ctx.beginPath()
+      crtPath(ctx, lv, true)
+      ctx.stroke()
+    }
+    if (this.fillStyle) {
+      this.transform(ctx)
+      ctx.fillRect(x0, y0, w, h)
+    }
+
     ctx.restore()
   }
 

@@ -1,5 +1,5 @@
-import { Vector2 } from '../math/Vector2'
-import { BasicStyle, BasicStyleType } from '../style/BasicStyle'
+import { Vector2 } from '../math'
+import { BasicStyle, BasicStyleType } from '../style'
 import { Object2D, Object2DType } from './Object2D'
 import { crtPathByMatrix } from '../utils'
 

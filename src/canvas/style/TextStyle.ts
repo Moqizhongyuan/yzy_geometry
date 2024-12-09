@@ -1,4 +1,4 @@
-import { StandStyle, StandStyleType } from './StandStyle'
+import { StandStyle, StandStyleType } from '.'
 
 type FontStyle = '' | 'italic'
 type FontWeight = '' | 'bold'

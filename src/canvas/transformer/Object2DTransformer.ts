@@ -1,6 +1,6 @@
 import { Matrix3 } from '../math/Matrix3'
 import { Vector2 } from '../math/Vector2'
-import { Object2D } from '../objects/Object2D'
+import { Object2D } from '../objects'
 
 class Object2DTransformer {
   /* 本地变换数据 */
@@ -130,8 +130,8 @@ class Object2DTransformer {
   move1(dragStart: Vector2, dragEnd: Vector2) {
     // 作业
     this.relativePosition.subVectors(
-      new Vector2(dragStart.x, 0),
-      new Vector2(dragEnd.x, 0)
+      new Vector2(dragEnd.x, 0),
+      new Vector2(dragStart.x, 0)
     )
   }
 }
