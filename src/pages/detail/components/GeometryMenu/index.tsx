@@ -24,16 +24,16 @@ const GeometryMenu = ({
   text: string
 }) => {
   const menuItems = [
-    // {
-    //   key: 'rectangle',
-    //   label: '矩形'
-    // },
+    {
+      key: 'rectangle',
+      label: '矩形'
+    },
     {
       key: 'text',
       label: '文字',
       children: [
         {
-          key: 'aaa',
+          key: 'drawText',
           label: '',
           extra: (
             <Input

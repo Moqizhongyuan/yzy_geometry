@@ -163,7 +163,7 @@ class Object2D extends EventDispatcher {
     /*  矩阵变换 */
     this.transform(ctx)
     /* 绘制图形 */
-    this.drawShape(ctx, _camera)
+    this.drawShape(ctx)
     ctx.restore()
   }
 

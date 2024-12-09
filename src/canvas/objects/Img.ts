@@ -79,13 +79,13 @@ class Img extends Object2D {
 
   /* 绘制图像边界 */
   crtPath(ctx: CanvasRenderingContext2D, matrix = this.pvmMatrix) {
+    // this.computeBoundingBox()
     const {
       boundingBox: {
         min: { x: x0, y: y0 },
         max: { x: x1, y: y1 }
       }
     } = this
-    this.computeBoundingBox()
     crtPathByMatrix(ctx, [x0, y0, x1, y0, x1, y1, x0, y1], matrix)
   }
 

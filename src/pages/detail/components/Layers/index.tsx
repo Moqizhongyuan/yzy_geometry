@@ -1,7 +1,7 @@
 import { Editor } from '@canvas/core/Editor'
 import style from './index.module.scss'
 import cn from 'classnames'
-import { Img } from '@canvas/objects'
+import { Img, Object2D } from '@canvas/objects'
 
 export interface Layer {
   src: string
@@ -76,7 +76,7 @@ const Layers = ({
 
   group.addEventListener('remove', ({ obj }) => {
     // 删除图层
-    removeLayer((obj as Img).uuid)
+    removeLayer((obj as Object2D).uuid)
   })
   /* 删除图层 */
   function removeLayer(uuid: string) {

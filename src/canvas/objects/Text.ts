@@ -67,7 +67,7 @@ class Text extends Object2D {
 
   /* 绘制图像边界 */
   crtPath(ctx: CanvasRenderingContext2D, matrix = this.pvmMatrix) {
-    this.computeBoundingBox()
+    // this.computeBoundingBox()
     const {
       boundingBox: {
         min: { x: x0, y: y0 },

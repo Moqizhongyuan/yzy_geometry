@@ -5,7 +5,8 @@ import { CursorType, Editor } from '@canvas/core/Editor'
 import style from './index.module.scss'
 import { Effector } from '@canvas/core/Effector'
 import Layers, { Layer } from './components/Layers'
-import { Img, Text } from '@canvas/objects'
+import { Img, Rectangle, Text } from '@canvas/objects'
+import { Vector2 } from '@canvas/math'
 
 const Detail = () => {
   const divRef = useRef<HTMLDivElement>(null)
@@ -74,14 +75,35 @@ const Detail = () => {
         localImgs={localImgs}
         clickFn={e => {
           const geometry = e.key
-          let obj: Img | Text
+          let obj: Img | Text | Rectangle
           const img = new Image()
           const text2D = new Text({
             text,
-            style: { fillStyle: '#000' }
+            style: { fillStyle: '#000', strokeStyle: '#aaa' }
+          })
+          const rect2D = new Rectangle({
+            size: new Vector2(200, 200),
+            style: { strokeStyle: '#333', lineWidth: 2 }
           })
           switch (geometry) {
-            case 'aaa':
+            case 'rectangle':
+              obj = editor?.addGeometry(rect2D) as Rectangle
+              setLayers(prev => {
+                const res = [...prev].map(item => {
+                  item.active = false
+                  return item
+                })
+                res.unshift({
+                  src: img.src,
+                  active: true,
+                  uuid: obj.uuid,
+                  name: obj.name,
+                  visible: obj.visible
+                })
+                return res
+              })
+              break
+            case 'drawText':
               obj = editor?.addGeometry(text2D) as Text
               setLayers(prev => {
                 const res = [...prev].map(item => {

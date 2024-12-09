@@ -1,5 +1,5 @@
 import { EventDispatcher } from '../core'
-import { Object2D, Group, Img, Text } from '../objects'
+import { Object2D, Group, Img, Text, Rectangle } from '../objects'
 import { Scene } from '../core'
 import { OrbitController, TransformController } from '../controller'
 import { selectObj } from '../utils'
@@ -77,6 +77,11 @@ class Editor extends EventDispatcher {
         resultGroup.add(
           new Text({ position, rotate, scale, offset, uuid, text, style })
         )
+      } else if (obj instanceof Rectangle) {
+        // const { position, rotate, scale, offset, uuid, style, size } = obj
+        // resultGroup.add(
+        //   new Rectangle({ position, rotate, scale, offset, uuid, style, size })
+        // )
       }
       this.render()
     })
@@ -98,6 +103,14 @@ class Editor extends EventDispatcher {
           rotate,
           scale,
           offset
+        })
+      } else if (resultObj instanceof Rectangle) {
+        resultObj.setOption({
+          position,
+          rotate,
+          scale,
+          offset,
+          size
         })
       }
     })
@@ -121,7 +134,7 @@ class Editor extends EventDispatcher {
     }
   }
 
-  addGeometry(geometry: HTMLImageElement | Text) {
+  addGeometry(geometry: HTMLImageElement | Text | Rectangle) {
     const {
       group: { children }
     } = this
@@ -157,10 +170,21 @@ class Editor extends EventDispatcher {
       this.group.add(text)
       this.controller.obj = text
       return text
+    } else if (geometry instanceof Rectangle) {
+      const rect = new Rectangle({
+        layerNum,
+        name: '图层' + layerNum,
+        size: geometry.size,
+        style: geometry.style
+      })
+      this.setGeometry2DSize(rect, 0.5)
+      this.group.add(rect)
+      this.controller.obj = rect
+      return rect
     }
   }
 
-  setGeometry2DSize(geometry: Img | Text, ratio: number) {
+  setGeometry2DSize(geometry: Img | Text | Rectangle, ratio: number) {
     const { designSize } = this
     if (geometry instanceof Img) {
       const width = (geometry.image as HTMLImageElement).width
@@ -170,8 +194,13 @@ class Editor extends EventDispatcher {
       geometry.size.set(w, h)
       geometry.offset.set(-w / 2, -h / 2)
     } else if (geometry instanceof Text) {
-      geometry.scale.set(designSize / geometry.size.height / 5)
+      geometry.scale.set((designSize * ratio) / geometry.size.height / 5)
       geometry.offset.set(0, 0)
+    } else if (geometry instanceof Rectangle) {
+      const w = designSize * ratio
+      const h = (w * geometry.size.height) / geometry.size.width
+      geometry.size.set(w, h)
+      geometry.offset.set(-w / 2, -h / 2)
     }
   }
 
