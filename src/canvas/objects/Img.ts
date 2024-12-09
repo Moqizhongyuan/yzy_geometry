@@ -1,6 +1,5 @@
-import { Matrix3 } from '../math'
-import { Vector2 } from '../math'
-import { BasicStyle, BasicStyleType } from '../style'
+import { Vector2 } from '../math/Vector2'
+import { BasicStyle, BasicStyleType } from '../style/BasicStyle'
 import { Object2D, Object2DType } from './Object2D'
 import { crtPathByMatrix } from '../utils'
 
@@ -41,7 +40,7 @@ class Img extends Object2D {
       switch (key) {
         case 'src':
           if (this.image instanceof Image) {
-            this.image.src = val as 'string'
+            this.image.src = val as string
           }
           break
         case 'style':
@@ -51,22 +50,6 @@ class Img extends Object2D {
           this[key] = val
       }
     }
-  }
-
-  /* 世界模型矩阵*偏移矩阵 */
-  get moMatrix(): Matrix3 {
-    const {
-      offset: { x, y }
-    } = this
-    return this.worldMatrix.multiply(new Matrix3().makeTranslation(x, y))
-  }
-
-  /* 视图投影矩阵*世界模型矩阵*偏移矩阵  */
-  get pvmoMatrix(): Matrix3 {
-    const {
-      offset: { x, y }
-    } = this
-    return this.pvmMatrix.multiply(new Matrix3().makeTranslation(x, y))
   }
 
   /* 绘图 */
@@ -95,11 +78,26 @@ class Img extends Object2D {
   }
 
   /* 绘制图像边界 */
-  crtPath(ctx: CanvasRenderingContext2D, matrix = this.pvmoMatrix) {
+  crtPath(ctx: CanvasRenderingContext2D, matrix = this.pvmMatrix) {
     const {
-      size: { x: imgW, y: imgH }
+      boundingBox: {
+        min: { x: x0, y: y0 },
+        max: { x: x1, y: y1 }
+      }
     } = this
-    crtPathByMatrix(ctx, [0, 0, imgW, 0, imgW, imgH, 0, imgH], matrix)
+    this.computeBoundingBox()
+    crtPathByMatrix(ctx, [x0, y0, x1, y0, x1, y1, x0, y1], matrix)
+  }
+
+  /* 计算边界盒子 */
+  computeBoundingBox() {
+    const {
+      boundingBox: { min, max },
+      size,
+      offset
+    } = this
+    min.copy(offset)
+    max.addVectors(offset, size)
   }
 }
 

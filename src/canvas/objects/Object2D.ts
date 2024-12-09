@@ -1,31 +1,49 @@
-import { Vector2 } from '../math'
+import { Vector2 } from '../math/Vector2'
 import { Group } from './Group'
-import { Camera, Scene } from '../core'
-import { EventDispatcher } from '../core'
-import { Matrix3 } from '../math'
+import { Scene } from '../core/Scene'
+import { EventDispatcher } from '../core/EventDispatcher'
+import { Matrix3 } from '../math/Matrix3'
 import { generateUUID } from '../utils'
+import { Camera } from '@canvas/core'
 
 export type Object2DType = {
   position?: Vector2
   rotate?: number
   scale?: Vector2
+  offset?: Vector2
+  boundingBox?: BoundingBox
   visible?: boolean
   index?: number
   name?: string
   parent?: Scene | Group | undefined
   enableCamera?: boolean
+  uuid?: string
   [key: string]: unknown
 }
 
+type BoundingBox = {
+  min: Vector2
+  max: Vector2
+}
+
+const pi2 = Math.PI * 2
+
 class Object2D extends EventDispatcher {
   // 自定义属性
-  [key: string]: unknown
+  [key: string]: any
   // 位置
   position = new Vector2()
   // 旋转
   rotate = 0
   // 缩放
   scale = new Vector2(1, 1)
+  // 偏移
+  offset = new Vector2()
+  // 边界盒子
+  boundingBox: BoundingBox = {
+    min: new Vector2(),
+    max: new Vector2()
+  }
   // 可见性
   visible = true
   // 渲染顺序
@@ -96,10 +114,31 @@ class Object2D extends EventDispatcher {
     ctx.scale(scale.x, scale.y)
   }
 
+  /* 将矩阵分解到当期对象的position, rotate, scale中 */
+  decomposeModelMatrix(m: Matrix3) {
+    const e = [...m.elements]
+    // 位移量
+    this.position.set(e[6], e[7])
+    // 缩放量
+    let sx = new Vector2(e[0], e[1]).length()
+    const sy = new Vector2(e[3], e[4]).length()
+    const det = m.determinant()
+    if (det < 0) {
+      sx = -sx
+    }
+    this.scale.set(sx, sy)
+    // 旋转量
+    let ang = Math.atan2(e[1] / sx, e[0] / sx)
+    if (ang < 0) {
+      ang += pi2
+    }
+    this.rotate = ang
+  }
+
   /* 从父级中删除自身 */
-  remove(obj?: Object2D) {
+  remove() {
     const { parent } = this
-    if (parent && !obj) {
+    if (parent) {
       parent.remove(this)
     }
   }
@@ -129,14 +168,13 @@ class Object2D extends EventDispatcher {
   }
 
   /* 绘制图形-接口 */
-  drawShape(ctx: CanvasRenderingContext2D, _camera?: Camera) {
-    console.log(ctx)
-  }
+  drawShape(_ctx: CanvasRenderingContext2D, _camera?: Camera) {}
 
   /* 创建路径-接口 */
-  crtPath(ctx: CanvasRenderingContext2D, projectionMatrix: Matrix3) {
-    console.log(ctx, projectionMatrix)
-  }
+  crtPath(_ctx: CanvasRenderingContext2D, _projectionMatrix: Matrix3) {}
+
+  /* 计算边界盒子 */
+  computeBoundingBox() {}
 }
 
 export { Object2D }

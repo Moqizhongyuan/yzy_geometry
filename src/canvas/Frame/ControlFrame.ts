@@ -1,104 +1,135 @@
-import { Rectangle } from '../objects'
 import { Matrix3 } from '../math'
 import { Vector2 } from '../math'
+import { Object2D } from '../objects'
 import { crtPath, crtPathByMatrix } from '../utils'
-import { State } from '.'
+
 const PI2 = Math.PI * 2
 
-type Level = 'moMatrix' | 'pvmoMatrix'
+export type State = 'scale' | 'scaleX' | 'scaleY' | 'rotate' | 'move' | null
+type Level = 'worldMatrix' | 'pvmMatrix'
 
-type FrameType = {
-  rect?: Rectangle
-  level?: Level
-}
-
-/* 布尔变量 */
 let _bool: boolean = false
 
-/* 虚拟canvas上下文对象 */
 const ctx = document
   .createElement('canvas')
   .getContext('2d') as CanvasRenderingContext2D
 
-class RectFrame {
-  _rect = new Rectangle()
-  vertices: number[] = []
-  // 图案中点
-  center = new Vector2()
+type ControlFrameType = {
+  obj?: Object2D
+  level?: Level
+}
+
+class ControlFrame {
+  // 目标对象
+  _obj = new Object2D()
+  // 图案本地坐标系内的边框的顶点集合
+  localVertices: number[] = []
+  // 图案裁剪坐标系的边框的顶点集合
+  clipVertices: number[] = []
+  // 当前节点索引
+  nodeIndex = 0
+  // 本地坐标系中的中点
+  localCenter = new Vector2()
+  // 裁剪坐标系中的中点
+  clipCenter = new Vector2()
   // 路径变换矩阵
   matrix = new Matrix3()
-  // 要把路径变换到哪个坐标系中，默认裁剪坐标系
-  level = 'pvmoMatrix'
+
+  level: Level = 'pvmMatrix'
 
   // 描边色
   strokeStyle = '#558ef0'
   // 填充色
   fillStyle = '#fff'
-  // 对面节点
-  opposite = new Vector2()
 
-  constructor(attr: FrameType = {}) {
+  constructor(attr: ControlFrameType = {}) {
     Object.assign(this, attr)
   }
 
-  get rect() {
-    return this._rect
+  get obj() {
+    return this._obj
   }
-  set rect(val) {
-    this._rect = val
-    this.updateShape()
+  set obj(val) {
+    this._obj = val
+    val.computeBoundingBox()
+    this.updateVertices()
   }
 
-  /* 更新矩阵、路径初始顶点、中点 */
-  updateShape() {
+  /* 获取对面节点 */
+  get localOpposite(): Vector2 {
+    return this.getOpposite('localVertices')
+  }
+  get clipOpposite(): Vector2 {
+    return this.getOpposite('clipVertices')
+  }
+  getOpposite(type: 'localVertices' | 'clipVertices') {
+    const { nodeIndex } = this
+    const vertices = this[type]
+    const ind = (nodeIndex + 8) % 16
+    return new Vector2(vertices[ind], vertices[ind + 1])
+  }
+
+  /* 更新localVertices和clipVertices*/
+  updateVertices() {
     const {
-      vertices: fv,
-      center,
-      rect,
+      clipVertices: cv,
+      localCenter,
+      clipCenter,
+      obj,
       level,
-      rect: {
-        size: { x: rectW, y: rectH }
+      obj: {
+        boundingBox: {
+          min: { x: x0, y: y0 },
+          max: { x: x1, y: y1 }
+        }
       }
     } = this
 
-    const vertices = [
-      0,
-      0,
-      rectW / 2,
-      0,
-      rectW,
-      0,
-      rectW,
-      rectH / 2,
-      rectW,
-      rectH,
-      rectW / 2,
-      rectH,
-      0,
-      rectH,
-      0,
-      rectH / 2
-    ]
+    const xm = (x0 + x1) / 2
+    const ym = (y0 + y1) / 2
 
-    /* 更新路径变换矩阵 */
-    this.matrix = rect[level] as Matrix3
-    for (let i = 0, len = vertices.length; i < len; i += 2) {
-      const { x, y } = new Vector2(vertices[i], vertices[i + 1]).applyMatrix3(
-        this.matrix
-      )
-      /* 更新路径顶点 */
-      fv[i] = x
-      fv[i + 1] = y
+    this.localVertices = [
+      x0,
+      y0,
+      xm,
+      y0,
+      x1,
+      y0,
+      x1,
+      ym,
+      x1,
+      y1,
+      xm,
+      y1,
+      x0,
+      y1,
+      x0,
+      ym
+    ]
+    const lv = this.localVertices
+    this.matrix = obj[level]
+    for (let i = 0, len = lv.length; i < len; i += 2) {
+      const { x, y } = new Vector2(lv[i], lv[i + 1]).applyMatrix3(this.matrix)
+      cv[i] = x
+      cv[i + 1] = y
     }
-    /* 更新中点 */
-    center.copy(new Vector2(fv[0], fv[1]).lerp(new Vector2(fv[8], fv[9]), 0.5))
+    localCenter.copy(
+      new Vector2(lv[0], lv[1]).lerp(new Vector2(lv[8], lv[9]), 0.5)
+    )
+    clipCenter.copy(
+      new Vector2(cv[0], cv[1]).lerp(new Vector2(cv[8], cv[9]), 0.5)
+    )
   }
 
   draw(ctx: CanvasRenderingContext2D) {
-    this.updateShape()
+    this.updateVertices()
     const {
-      rect: { size },
-      center,
+      obj: {
+        size,
+        offset: { x: ox, y: oy }
+      },
+      clipVertices: fv,
+      clipCenter,
       matrix,
       strokeStyle,
       fillStyle
@@ -114,6 +145,9 @@ class RectFrame {
 
     /* 矩形框 */
     ctx.beginPath()
+    crtPath(ctx, [fv[0], fv[1], fv[4], fv[5], fv[8], fv[9], fv[12], fv[13]])
+    ctx.closePath()
+    ctx.stroke()
 
     /* 矩形节点 */
     const { elements: e } = matrix
@@ -134,7 +168,16 @@ class RectFrame {
         const [bx, by] = [halfWidth * x, halfHeight * y]
         crtPathByMatrix(
           ctx,
-          [bx - w, by - h, bx + w, by - h, bx + w, by + h, bx - w, by + h],
+          [
+            ox + bx - w,
+            oy + by - h,
+            ox + bx + w,
+            oy + by - h,
+            ox + bx + w,
+            oy + by + h,
+            ox + bx - w,
+            oy + by + h
+          ],
           matrix,
           true
         )
@@ -145,14 +188,15 @@ class RectFrame {
 
     /* 中点 */
     ctx.beginPath()
-    ctx.arc(center.x, center.y, 5, 0, PI2)
+    ctx.arc(clipCenter.x, clipCenter.y, 5, 0, PI2)
     ctx.fill()
     ctx.stroke()
     ctx.restore()
   }
 
+  /* 获取变换状态 */
   getMouseState(mp: Vector2): State {
-    const { vertices: fv } = this
+    const { clipVertices: fv } = this
 
     /* 对角线距离 */
     const diagonal = new Vector2(fv[0] - fv[8], fv[1] - fv[9]).length()
@@ -163,8 +207,7 @@ class RectFrame {
     /* x,y缩放 */
     for (let i = 0, len = fv.length; i < len; i += 4) {
       if (new Vector2(fv[i], fv[i + 1]).sub(mp).length() < scaleDist) {
-        const ind = (i + 8) % 16
-        this.opposite.set(fv[ind], fv[ind + 1])
+        this.nodeIndex = i
         return 'scale'
       }
     }
@@ -177,7 +220,7 @@ class RectFrame {
     _bool = ctx.isPointInStroke(mp.x, mp.y)
     ctx.restore()
     if (_bool) {
-      this.opposite.set(fv[10], fv[11])
+      this.nodeIndex = 2
       return 'scaleY'
     }
 
@@ -188,7 +231,7 @@ class RectFrame {
     _bool = ctx.isPointInStroke(mp.x, mp.y)
     ctx.restore()
     if (_bool) {
-      this.opposite.set(fv[2], fv[3])
+      this.nodeIndex = 10
       return 'scaleY'
     }
 
@@ -200,7 +243,7 @@ class RectFrame {
     _bool = ctx.isPointInStroke(mp.x, mp.y)
     ctx.restore()
     if (_bool) {
-      this.opposite.set(fv[6], fv[7])
+      this.nodeIndex = 14
       return 'scaleX'
     }
 
@@ -211,7 +254,7 @@ class RectFrame {
     _bool = ctx.isPointInStroke(mp.x, mp.y)
     ctx.restore()
     if (_bool) {
-      this.opposite.set(fv[14], fv[15])
+      this.nodeIndex = 6
       return 'scaleX'
     }
 
@@ -226,8 +269,7 @@ class RectFrame {
     ctx.save()
     ctx.lineWidth = 80
     ctx.beginPath()
-    crtPath(ctx, fv)
-    ctx.closePath()
+    crtPath(ctx, fv, true)
     _bool = ctx.isPointInStroke(mp.x, mp.y)
     ctx.restore()
     if (_bool) {
@@ -238,4 +280,4 @@ class RectFrame {
     return null
   }
 }
-export { RectFrame }
+export { ControlFrame }

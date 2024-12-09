@@ -72,13 +72,14 @@ const Detail = () => {
           const geometry = e.key
           const img = new Image()
           switch (geometry) {
-            case 'rectangle':
-              editor?.addGeometry('rect')
-              break
+            // case 'rectangle':
+            //   // editor?.addGeometry('rect')
+            //   break
             case 'localImg':
               setVisible(!visible)
               break
             default:
+              setVisible(false)
               img.src = e.key.split(' ')[1]
               img.onload = () => {
                 const { uuid, name, visible } = editor?.addGeometry(img) ?? {

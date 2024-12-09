@@ -1,4 +1,3 @@
-export * from './ImgController'
+export * from './TransformController'
 export * from './OrbitController'
 export * from './MouseShape'
-export * from './RectController'

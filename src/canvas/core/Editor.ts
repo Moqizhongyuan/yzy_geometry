@@ -1,9 +1,7 @@
 import { EventDispatcher } from '../core'
-import { Object2D } from '../objects'
-import { Group, Rectangle, Img } from '../objects'
+import { Object2D, Group, Rectangle, Img } from '../objects'
 import { Scene } from '../core'
-import { OrbitController, RectController } from '../controller'
-import { ImgController } from '../controller'
+import { OrbitController, TransformController } from '../controller'
 import { selectObj } from '../utils'
 import { Vector2 } from '@canvas/math'
 import { MutableRefObject } from 'react'
@@ -15,10 +13,9 @@ class Editor extends EventDispatcher {
   editorScene = new Scene()
   /* 编辑器中的图案 */
   group = new Group()
-  /* 图案控制器 */
-  imgController = new ImgController()
+  /* 控制器 */
+  controller = new TransformController()
   // 矩形控制器
-  rectController = new RectController()
   /* 相机轨道控制器 */
   orbitController = new OrbitController(this.editorScene.camera)
   /* 鼠标划入的图形 */
@@ -42,22 +39,18 @@ class Editor extends EventDispatcher {
       editorScene,
       orbitController,
       group,
-      imgController,
-      rectController,
+      controller,
       designImg,
       resultScene,
       resultGroup
     } = this
     /* 编辑器场景*/
-    editorScene.add(group, imgController, rectController, designImg)
+    editorScene.add(group, controller, designImg)
     resultScene.add(resultGroup)
     this.cursor = reactCursor
 
     /* 渲染编辑器和虚拟场景 */
-    imgController.addEventListener('change', () => {
-      this.render()
-    })
-    rectController.addEventListener('change', () => {
+    controller.addEventListener('change', () => {
       this.render()
     })
     orbitController.addEventListener('change', () => {
@@ -80,7 +73,7 @@ class Editor extends EventDispatcher {
       }
       this.render()
     })
-    imgController.addEventListener('transformed', ({ obj }) => {
+    controller.addEventListener('transformed', ({ obj }) => {
       const { position, rotate, scale, offset, size } = obj as Img
       const resultImg = resultGroup.children[group.children.indexOf(obj as Img)]
       if (resultImg instanceof Img) {
@@ -135,7 +128,7 @@ class Editor extends EventDispatcher {
       /* 添加图案 */
       this.group.add(img)
       /* 选择图案 */
-      this.imgController.img = img
+      this.controller.obj = img
       return img
     } else if (geometry === 'rect') {
       const rect = new Rectangle({ layerNum, name: '图层' + layerNum })
@@ -216,26 +209,17 @@ class Editor extends EventDispatcher {
 
   /* 鼠标按下 */
   pointerdown(event: PointerEvent) {
-    const {
-      editorScene,
-      imgController,
-      rectController,
-      group,
-      orbitController
-    } = this
+    const { editorScene, controller, group, orbitController } = this
     const { button, clientX, clientY } = event
     const mp = editorScene.clientToClip(clientX, clientY)
     switch (button) {
       case 0:
         this.objHover = selectObj(editorScene)(group.children, mp)
-        if (this.objHover instanceof Rectangle) {
-          rectController.pointerdown(this.objHover, mp)
-        } else if (this.objHover instanceof Img) {
-          imgController.pointerdown(this.objHover, mp)
+        if (this.objHover instanceof Img) {
+          controller.pointerdown(this.objHover, mp)
         } else {
           const hoverVal = this.objHover as null
-          rectController.pointerdown(hoverVal, mp)
-          imgController.pointerdown(hoverVal, mp)
+          controller.pointerdown(hoverVal, mp)
         }
         this.updateMouseCursor()
         break
@@ -247,18 +231,11 @@ class Editor extends EventDispatcher {
 
   /* 鼠标移动 */
   pointermove(event: PointerEvent) {
-    const {
-      editorScene,
-      imgController,
-      group,
-      orbitController,
-      rectController
-    } = this
+    const { editorScene, controller, group, orbitController } = this
     const { clientX, clientY } = event
     const mp = editorScene.clientToClip(clientX, clientY)
     orbitController.pointermove(clientX, clientY)
-    imgController.pointermove(mp)
-    rectController.pointermove(mp)
+    controller.pointermove(mp)
     this.objHover = selectObj(editorScene)(group.children, mp)
     this.updateMouseCursor()
   }
@@ -267,8 +244,7 @@ class Editor extends EventDispatcher {
   pointerup({ button }: PointerEvent) {
     switch (button) {
       case 0:
-        this.imgController.pointerup()
-        this.rectController.pointerup()
+        this.controller.pointerup()
         break
       case 1:
         this.orbitController.pointerup()
@@ -278,15 +254,13 @@ class Editor extends EventDispatcher {
 
   /* 键盘按下 */
   keydown({ key, altKey, shiftKey }: KeyboardEvent) {
-    this.imgController.keydown(key, altKey, shiftKey)
-    this.rectController.keydown(key, altKey, shiftKey)
+    this.controller.keydown(key, altKey, shiftKey)
     this.updateMouseCursor()
   }
 
   /* 键盘抬起 */
   keyup({ altKey, shiftKey }: KeyboardEvent) {
-    this.imgController.keyup(altKey, shiftKey)
-    this.rectController.keyup(altKey, shiftKey)
+    this.controller.keyup(altKey, shiftKey)
   }
 
   /* 滑动滚轮 */
@@ -304,8 +278,8 @@ class Editor extends EventDispatcher {
 
   /* 更新鼠标样式 */
   updateMouseCursor() {
-    const { imgController, cursor, objHover } = this
-    if (imgController.mouseState) {
+    const { controller, cursor, objHover } = this
+    if (controller.mouseState) {
       cursor.current = 'none'
     } else if (objHover) {
       cursor.current = 'pointer'
@@ -315,11 +289,9 @@ class Editor extends EventDispatcher {
   }
 
   selectImgByUUID(uuid: string) {
-    const { group, imgController } = this
-    const obj = group.getObjectByProperty('uuid', uuid)
-    if (obj instanceof Img) {
-      imgController.img = obj
-    }
+    const { group, controller } = this
+    const obj = group.getObjectByProperty('uuid', uuid) ?? null
+    controller.obj = obj
   }
 
   setVisibleByUUID(uuid: string) {

@@ -41,7 +41,6 @@ const Layers = ({
   }
 
   function drop({ dataTransfer }: React.DragEvent, index: number) {
-    console.log('object')
     if (!dataTransfer) {
       return
     }
@@ -66,11 +65,11 @@ const Layers = ({
   }
 
   const {
-    imgController,
+    controller,
     group,
     group: { children }
   } = editor
-  imgController.addEventListener('selected', ({ obj }) => {
+  controller.addEventListener('selected', ({ obj }) => {
     // 更新图层选择状态
     activateLayer(children.length - 1 - children.indexOf(obj as Img))
   })

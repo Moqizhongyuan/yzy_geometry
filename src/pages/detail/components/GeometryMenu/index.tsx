@@ -20,10 +20,10 @@ const GeometryMenu = ({
   className?: string
 }) => {
   const menuItems = [
-    {
-      key: 'rectangle',
-      label: '矩形'
-    },
+    // {
+    //   key: 'rectangle',
+    //   label: '矩形'
+    // },
     // {
     //   key: 'internetImg',
     //   label: '上传线上图像'

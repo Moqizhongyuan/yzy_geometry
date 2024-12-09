@@ -1,2 +1,1 @@
-export * from './ImgFrame'
-export * from './RectFrame'
+export * from './ControlFrame'

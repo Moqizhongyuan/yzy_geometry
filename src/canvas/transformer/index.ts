@@ -1,2 +1,2 @@
-export * from './ImgTransformer'
+export * from './Object2DTransformer'
 export * from './RectTransformer'

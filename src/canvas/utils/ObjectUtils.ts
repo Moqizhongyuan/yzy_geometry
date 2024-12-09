@@ -41,7 +41,7 @@ function selectObj(scene: Scene) {
     for (const item of [...group].reverse()) {
       if (
         (item instanceof Img || item instanceof Rectangle) &&
-        scene.isPointInObj(item, mp, item.pvmoMatrix) &&
+        scene.isPointInObj(item, mp, item.pvmMatrix) &&
         item.visible
       ) {
         return item
