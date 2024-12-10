@@ -65,7 +65,7 @@ const UploadLocalImg = ({
 
   return (
     <Dragger
-      className={`absolute right-0 w-[calc(100vw-180px)] opacity-80 h-full ${className} ${style.uploadImg}`}
+      className={`absolute right-0 w-[calc(100vw-256px)] opacity-80 h-full ${className} ${style.uploadImg}`}
       {...props}
     >
       <p className="ant-upload-drag-icon">

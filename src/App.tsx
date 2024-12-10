@@ -4,15 +4,16 @@ import {
   BrowserRouter as Router,
   Routes
 } from 'react-router-dom'
-import Detail from './pages/detail'
-import Home from './pages/home'
 import './styles/base.css'
 import './styles/var.css'
 import NavBar from './components/NavBar'
-import Doc from './pages/doc'
 import { ThemeProvider as AntThemeProvider } from 'antd-style'
-import { useContext } from 'react'
+import React, { useContext, Suspense } from 'react'
 import ThemeContext from '@components/ThemeContext'
+
+const Home = React.lazy(() => import('./pages/home'))
+const Detail = React.lazy(() => import('./pages/detail'))
+const Doc = React.lazy(() => import('./pages/doc'))
 
 const App = () => {
   const context = useContext(ThemeContext)
@@ -41,12 +42,14 @@ const App = () => {
     >
       <Router>
         <NavBar />
-        <Routes>
-          <Route path="/" element={<Navigate to="/home" />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/detail" element={<Detail />} />
-          <Route path="/doc" element={<Doc />} />
-        </Routes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Routes>
+            <Route path="/" element={<Navigate to="/home" />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/detail" element={<Detail />} />
+            <Route path="/doc" element={<Doc />} />
+          </Routes>
+        </Suspense>
       </Router>
     </AntThemeProvider>
   )

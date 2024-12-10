@@ -6,6 +6,7 @@ import VitePluginImp from 'vite-plugin-imp'
 import path from 'path'
 import viteImagemin from 'vite-plugin-imagemin'
 import createPlugins from './plugins'
+// import { chunkSplitPlugin } from 'vite-plugin-chunk-split'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -44,6 +45,14 @@ export default defineConfig({
       // 打包完成后自动打开浏览器，显示产物体积报告
       open: false
     })
+    // chunkSplitPlugin({
+    //   strategy: 'single-vendor',
+    //   customSplitting: {
+    //     // 'react-vendor': ['/node_modules/react', '/node_modules/react-dom'],
+    //     canvas: ['/src/canvas']
+    //     // library: ['/node_modules/antd']
+    //   }
+    // })
   ],
   server: {
     // https: true, // 启用 https
@@ -58,10 +67,19 @@ export default defineConfig({
     }
   },
   build: {
-    minify: 'esbuild', // 默认使用 terser 进行压缩
+    minify: 'esbuild',
     terserOptions: {
       output: {
         comments: false // 删除所有注释
+      }
+    },
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendors': ['react', 'react-dom'],
+          'canvas-vendors': ['@canvas'],
+          'antd-vendors': ['antd']
+        }
       }
     }
   }
