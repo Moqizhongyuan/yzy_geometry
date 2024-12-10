@@ -1,3 +1,18 @@
+# [2.1.0](https://github.com/Moqizhongyuan/yzy_geometry/compare/v2.0.0...v2.1.0) (2024-12-10)
+
+### Bug Fixes
+
+- 修复了文字基线偏移之后节点绘制不准的bug ([2501ae6](https://github.com/Moqizhongyuan/yzy_geometry/commit/2501ae6e077b458b8428dc6408116482b0759544))
+
+### Features
+
+- 对test注入全局变量 ([59f54b1](https://github.com/Moqizhongyuan/yzy_geometry/commit/59f54b14e8b65fe56ce0e9e8dedfe9e8fef3b7b0))
+- 绘制矩形类 ([e2d94e7](https://github.com/Moqizhongyuan/yzy_geometry/commit/e2d94e7113ba2746b07e07dd99e41847ff819bcc))
+- 将矩形绘制接口暴露给用户，并将矩形绘制添加到图层控制 ([ad5d436](https://github.com/Moqizhongyuan/yzy_geometry/commit/ad5d436bc2398378d5a255f2d0df7a52b1d96b09))
+- 设计文字类 ([c56c0c7](https://github.com/Moqizhongyuan/yzy_geometry/commit/c56c0c7c403c952b4ca680748704b8f51a0bb2ab))
+- 向用户提供文字绘制接口 ([6faabac](https://github.com/Moqizhongyuan/yzy_geometry/commit/6faabac2fcc21bfb032925bbcc7507692f4ff196))
+- 增加文字绘制功能 ([8d2355b](https://github.com/Moqizhongyuan/yzy_geometry/commit/8d2355b9c94e7b3ee1b89df504268ed8ab8c71da))
+
 # [2.0.0](https://github.com/Moqizhongyuan/yzy_geometry/compare/v1.1.0...v2.0.0) (2024-12-08)
 
 ### Bug Fixes
