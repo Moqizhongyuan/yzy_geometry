@@ -42,7 +42,13 @@ const App = () => {
     >
       <Router>
         <NavBar />
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense
+          fallback={
+            <div className="w-full h-full flex items-center justify-center text-center text-3xl">
+              <div>Loading...</div>
+            </div>
+          }
+        >
           <Routes>
             <Route path="/" element={<Navigate to="/home" />} />
             <Route path="/home" element={<Home />} />
