@@ -2,6 +2,7 @@ import { Scene } from '.'
 import { Img } from '../objects'
 import { Vector2 } from '../math'
 import { ImagePromise } from '../utils'
+import { queueScene } from '@canvas/nextTicks'
 
 /* 图案数据类型 */
 type Img2DType = {
@@ -11,6 +12,10 @@ type Img2DType = {
 
 class Effector {
   scene = new Scene()
+
+  constructor() {
+    this.scene.index = 2
+  }
 
   onMounted(effectDom: HTMLDivElement) {
     const {
@@ -56,13 +61,13 @@ class Effector {
 
     /* 渲染 */
     Promise.all(pros).then(() => {
-      scene.render()
+      queueScene(this.scene)
     })
   }
 
   /* 渲染 */
   render() {
-    this.scene.render()
+    queueScene(this.scene)
   }
 }
 

@@ -49,6 +49,10 @@ class Editor extends EventDispatcher {
     /* 编辑器场景*/
     group.name = 'editorGroup'
     resultGroup.name = 'resultGroup'
+    editorScene.name = 'editorScene'
+    resultScene.name = 'resultScene'
+    editorScene.index = 0
+    resultScene.index = 1
     editorScene.add(group, controller, designImg)
     resultScene.add(resultGroup)
     this.cursor = reactCursor
@@ -132,7 +136,7 @@ class Editor extends EventDispatcher {
     })
     /* 渲染 */
     ;(designImg.image as HTMLImageElement).onload = () => {
-      this.editorScene.render()
+      queueScene(this.editorScene)
     }
   }
 

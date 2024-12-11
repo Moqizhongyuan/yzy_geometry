@@ -39,6 +39,7 @@ export function queueScene(obj: Scene) {
 }
 
 function flushSchedulerQueue() {
+  queue.sort((a, b) => a.index - b.index)
   while (queue.length > 0) {
     const obj = queue.shift()!
     const id = obj.uuid
