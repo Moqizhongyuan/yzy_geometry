@@ -45,14 +45,6 @@ export default defineConfig({
       // 打包完成后自动打开浏览器，显示产物体积报告
       open: false
     })
-    // chunkSplitPlugin({
-    //   strategy: 'single-vendor',
-    //   customSplitting: {
-    //     // 'react-vendor': ['/node_modules/react', '/node_modules/react-dom'],
-    //     canvas: ['/src/canvas']
-    //     // library: ['/node_modules/antd']
-    //   }
-    // })
   ],
   server: {
     // https: true, // 启用 https

@@ -31,22 +31,32 @@ const GeometryMenu = ({
     {
       key: 'text',
       label: '文字',
-      children: [
-        {
-          key: 'drawText',
-          label: '',
-          extra: (
-            <Input
-              placeholder="请输入文字"
-              onClick={e => e.stopPropagation()}
-              value={text}
-              onChange={e => {
-                setText(e.target.value)
-              }}
-            />
-          )
-        }
-      ]
+      extra: (
+        <Input
+          placeholder="请输入文字"
+          onClick={e => e.stopPropagation()}
+          value={text}
+          onChange={e => {
+            setText(e.target.value)
+          }}
+        />
+      )
+      // children: [
+      //   {
+      //     key: 'drawText',
+      //     label: '',
+      //     extra: (
+      //       <Input
+      //         placeholder="请输入文字"
+      //         onClick={e => e.stopPropagation()}
+      //         value={text}
+      //         onChange={e => {
+      //           setText(e.target.value)
+      //         }}
+      //       />
+      //     )
+      //   }
+      // ]
     },
     {
       key: 'imgStorage',
@@ -73,7 +83,7 @@ const GeometryMenu = ({
       onClick={clickFn}
       items={menuItems}
       selectedKeys={selectKeys}
-      className={`${className} py-2 overflow-auto`}
+      className={`${className} py-2 overflow-auto z-10`}
     />
   )
 }

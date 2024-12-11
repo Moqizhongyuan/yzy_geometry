@@ -1,4 +1,4 @@
-export * from './Frame'
+export * from './frame'
 export * from './controller'
 export * from './core'
 export * from './math'

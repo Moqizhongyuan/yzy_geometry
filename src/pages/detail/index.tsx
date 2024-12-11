@@ -7,8 +7,10 @@ import { Effector } from '@canvas/core/Effector'
 import Layers, { Layer } from './components/Layers'
 import { Img, Rectangle, Text } from '@canvas/objects'
 import { Vector2 } from '@canvas/math'
+import ColorPicker from './components/ColorPicker'
 
 const Detail = () => {
+  const [colorPick, setColorPick] = useState<string>('rgb(0, 0, 0)')
   const divRef = useRef<HTMLDivElement>(null)
   const divRightRef = useRef<HTMLDivElement>(null)
   const cursor = useRef<CursorType>('default')
@@ -53,7 +55,6 @@ const Detail = () => {
       divRef.current as HTMLDivElement,
       divRightRef.current as HTMLDivElement
     )
-    editor.editorScene.render()
     editor.setDesignImg('/images/design.jpg.webp')
     setEditor(editor)
     const effector = new Effector()
@@ -79,11 +80,11 @@ const Detail = () => {
           const img = new Image()
           const text2D = new Text({
             text,
-            style: { fillStyle: '#000', strokeStyle: '#aaa' }
+            style: { fillStyle: colorPick, strokeStyle: '#aaa' }
           })
           const rect2D = new Rectangle({
             size: new Vector2(200, 200),
-            style: { strokeStyle: '#333', lineWidth: 2, fillStyle: '#325' }
+            style: { strokeStyle: '#000', lineWidth: 2, fillStyle: colorPick }
           })
           switch (geometry) {
             case 'rectangle':
@@ -103,7 +104,7 @@ const Detail = () => {
                 return res
               })
               break
-            case 'drawText':
+            case 'text':
               obj = editor?.addGeometry(text2D) as Text
               setLayers(prev => {
                 const res = [...prev].map(item => {
@@ -168,6 +169,7 @@ const Detail = () => {
         setVisible={setVisible}
         className={visible ? 'visible' : 'invisible'}
       />
+      <ColorPicker onColorPick={setColorPick} color={colorPick} />
     </div>
   )
 }

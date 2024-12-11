@@ -25,6 +25,7 @@ class Scene extends Group {
   readonly isScene = true
   // 子元素
   children: Array<Object2D>
+  name: string = 'Scene'
 
   constructor(backgroundProp?: BackgroundType, attr: SceneType = {}) {
     super()
@@ -76,7 +77,7 @@ class Scene extends Group {
         camera.transformInvert(ctx)
       }
       // 绘图
-      obj.draw(ctx, camera)
+      obj.draw(ctx)
       ctx.restore()
     }
     ctx.restore()

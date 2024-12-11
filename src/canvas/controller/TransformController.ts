@@ -2,7 +2,7 @@ import { Vector2 } from '../math/Vector2'
 import { Object2D } from '../objects/Object2D'
 import { Matrix3 } from '../math/Matrix3'
 import { MouseShape } from './MouseShape'
-import { ControlFrame, State } from '../Frame'
+import { ControlFrame, State } from '../frame'
 import { Object2DTransformer } from '../transformer'
 
 type TransformKey =

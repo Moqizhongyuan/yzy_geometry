@@ -36,6 +36,7 @@ class Text extends Object2D {
   text = ''
   maxWidth: number | undefined
   style: TextStyle = new TextStyle()
+  name: string = 'Text'
 
   // 类型
   readonly isText = true

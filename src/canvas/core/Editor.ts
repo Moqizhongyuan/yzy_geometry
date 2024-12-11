@@ -26,7 +26,8 @@ class Editor extends EventDispatcher {
   designSize = 0
 
   designImg = new Img({
-    index: 1000
+    index: 1000,
+    name: 'DesignImg'
   })
 
   resultScene = new Scene()

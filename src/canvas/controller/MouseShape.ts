@@ -1,4 +1,4 @@
-import { State } from '../Frame'
+import { State } from '../frame'
 import { Vector2 } from '../math/Vector2'
 import { crtPath } from '../utils'
 

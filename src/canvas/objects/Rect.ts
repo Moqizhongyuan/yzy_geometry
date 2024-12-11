@@ -10,11 +10,11 @@ type RectType = Object2DType & {
 }
 
 class Rectangle extends Object2D {
-  image: CanvasImageSource = new Image()
   offset: Vector2 = new Vector2()
   size: Vector2 = new Vector2(300, 150)
   style: StandStyle = new StandStyle()
   enableCamera: boolean = false
+  name: string = 'Rectangle'
 
   // 类型
   readonly isImg = true

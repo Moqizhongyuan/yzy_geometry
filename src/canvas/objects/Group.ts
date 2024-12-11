@@ -1,6 +1,7 @@
 import { Object2D, Object2DType } from './Object2D'
 
 class Group extends Object2D {
+  name: string = 'Group'
   // 子集
   children: Object2D[] = []
   // 类型

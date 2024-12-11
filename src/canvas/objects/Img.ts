@@ -25,6 +25,7 @@ class Img extends Object2D {
   size: Vector2 = new Vector2(300, 150)
   view: View | undefined
   style: BasicStyle = new BasicStyle()
+  name: string = 'Img'
 
   // 类型
   readonly isImg = true

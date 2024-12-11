@@ -155,7 +155,7 @@ class Object2D extends EventDispatcher {
   }
 
   /* 绘图 */
-  draw(ctx: CanvasRenderingContext2D, _camera?: Camera) {
+  draw(ctx: CanvasRenderingContext2D) {
     if (!this.visible) {
       return
     }
