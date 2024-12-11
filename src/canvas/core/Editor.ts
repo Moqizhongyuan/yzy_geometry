@@ -5,6 +5,7 @@ import { OrbitController, TransformController } from '../controller'
 import { selectObj } from '../utils'
 import { Vector2 } from '@canvas/math'
 import { MutableRefObject } from 'react'
+import { queueScene } from '@canvas/nextTicks'
 
 export type CursorType = 'none' | 'default' | 'pointer'
 
@@ -366,8 +367,8 @@ class Editor extends EventDispatcher {
 
   /* 设计图和效果图的渲染 */
   render() {
-    this.editorScene.render()
-    this.resultScene.render()
+    queueScene(this.editorScene)
+    queueScene(this.resultScene)
     this.dispatchEvent({ type: 'render' })
   }
 }
