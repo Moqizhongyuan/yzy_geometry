@@ -5,7 +5,7 @@ import { CursorType, Editor } from '@canvas/core/Editor'
 import style from './index.module.scss'
 import { Effector } from '@canvas/core/Effector'
 import Layers, { Layer } from './components/Layers'
-import { Img, Rectangle, Text } from '@canvas/objects'
+import { Img, Object2D, Rectangle, Text } from '@canvas/objects'
 import { Vector2 } from '@canvas/math'
 import DrawStyle from './components/DrawStyle'
 
@@ -70,6 +70,19 @@ const Detail = () => {
       effector.onUnmounted()
     }
   }, [editor])
+  useEffect(() => {
+    const obj = editor.controller.obj
+    if (obj) {
+      obj.setOption({
+        style: {
+          lineWidth: strokeWidth,
+          strokeStyle: strokeColor,
+          fillStyle: fillColor
+        }
+      })
+      editor.controller.dispatchEvent({ type: 'transformed', obj })
+    }
+  }, [strokeWidth, strokeColor, fillColor, editor])
   return (
     <div className="flex h-full relative">
       <GeometryMenu

@@ -92,7 +92,7 @@ class Editor extends EventDispatcher {
       this.render()
     })
     controller.addEventListener('transformed', ({ obj }) => {
-      const { position, rotate, scale, offset, size } = obj as Object2D
+      const { position, rotate, scale, offset, size, style } = obj as Object2D
       const resultObj =
         resultGroup.children[group.children.indexOf(obj as Object2D)]
       if (resultObj instanceof Img) {
@@ -101,14 +101,16 @@ class Editor extends EventDispatcher {
           rotate,
           scale,
           offset,
-          size
+          size,
+          style
         })
       } else if (resultObj instanceof Text) {
         resultObj.setOption({
           position,
           rotate,
           scale,
-          offset
+          offset,
+          style
         })
       } else if (resultObj instanceof Rectangle) {
         resultObj.setOption({
@@ -116,9 +118,11 @@ class Editor extends EventDispatcher {
           rotate,
           scale,
           offset,
-          size
+          size,
+          style
         })
       }
+      this.render()
     })
     // 删除图案
     group.addEventListener('remove', ({ obj }) => {
