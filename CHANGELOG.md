@@ -1,3 +1,16 @@
+# [2.2.0](https://github.com/Moqizhongyuan/yzy_geometry/compare/v2.1.0...v2.2.0) (2024-12-12)
+
+### Bug Fixes
+
+- 添加index确保scene的render顺序正常 ([04584f8](https://github.com/Moqizhongyuan/yzy_geometry/commit/04584f849af0278bc58b6a784d6442f43442cdc1))
+
+### Features
+
+- 添加取色板组件 ([d901334](https://github.com/Moqizhongyuan/yzy_geometry/commit/d9013349029787e12ce46a3e94b6e265f7bd41a6))
+- 添加suspense居中样式 ([eac005e](https://github.com/Moqizhongyuan/yzy_geometry/commit/eac005e99c14d96dbe3301a3ade04ed4e0ed19d7))
+- 引入异步更新机制，在绘制同样图片数量的情况下inp指标提升了约20倍 ([6d65d23](https://github.com/Moqizhongyuan/yzy_geometry/commit/6d65d23c74f4ad107a3bade2ca1a28e21a303743))
+- 增加404页面&icon ([709590d](https://github.com/Moqizhongyuan/yzy_geometry/commit/709590db61fb96497f12e959666da281bb28b290))
+
 # [2.1.0](https://github.com/Moqizhongyuan/yzy_geometry/compare/v2.0.0...v2.1.0) (2024-12-10)
 
 ### Bug Fixes
