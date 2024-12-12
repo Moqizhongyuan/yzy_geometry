@@ -54,7 +54,9 @@ const NavBar = () => {
   }
 
   return (
-    <header className={`h-10 flex px-6 border-b-2 ${styles.nav}`}>
+    <header
+      className={`h-10 flex px-6 border-b-2 transition duration-300 ${styles.nav}`}
+    >
       <div className="flex-[3] text-4xl">
         <Link className="font-semibold hover:opacity-60" to={'/home'}>
           RY
@@ -62,6 +64,7 @@ const NavBar = () => {
       </div>
       <div className="flex flex-[2] justify-between items-center">
         <Switcher
+          value={context?.value !== 'dark'}
           onClickFn={toggle}
           icon1={<i className="fa-solid fa-sun" />}
           icon2={<i className="fa-solid fa-moon" />}

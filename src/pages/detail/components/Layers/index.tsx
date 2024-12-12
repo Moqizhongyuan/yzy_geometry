@@ -86,7 +86,7 @@ const Layers = ({
   return (
     <ul
       id="layer"
-      className={`flex-1 p-1 space-y-1 overflow-auto ${style.layerList}`}
+      className={`flex-1 p-1 space-y-1 overflow-auto transition duration-300 ${style.layerList}`}
     >
       {layers.map((layer, index) => (
         <li
