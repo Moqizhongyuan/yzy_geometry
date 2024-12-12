@@ -10,6 +10,7 @@ import NavBar from './components/NavBar'
 import { ThemeProvider as AntThemeProvider } from 'antd-style'
 import React, { useContext, Suspense } from 'react'
 import ThemeContext from '@components/ThemeContext'
+import NotFound from './pages/notFound'
 
 const Home = React.lazy(() => import('./pages/home'))
 const Detail = React.lazy(() => import('./pages/detail'))
@@ -54,6 +55,7 @@ const App = () => {
             <Route path="/home" element={<Home />} />
             <Route path="/detail" element={<Detail />} />
             <Route path="/doc" element={<Doc />} />
+            <Route path="/*" element={<NotFound />} />
           </Routes>
         </Suspense>
       </Router>
