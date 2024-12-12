@@ -7,10 +7,11 @@ import { Effector } from '@canvas/core/Effector'
 import Layers, { Layer } from './components/Layers'
 import { Img, Rectangle, Text } from '@canvas/objects'
 import { Vector2 } from '@canvas/math'
-import ColorPicker from './components/ColorPicker'
+import DrawStyle from './components/DrawStyle'
 
 const Detail = () => {
-  const [colorPick, setColorPick] = useState<string>('rgb(0, 0, 0)')
+  const [strokeColor, setStrokeColor] = useState<string>('rgb(0, 0, 0)')
+  const [fillColor, setFillColor] = useState<string>('rgb(0, 0, 0)')
   const divRef = useRef<HTMLDivElement>(null)
   const divRightRef = useRef<HTMLDivElement>(null)
   const cursor = useRef<CursorType>('default')
@@ -25,6 +26,7 @@ const Detail = () => {
     }>
   >([])
   const [text, setText] = useState<string>('')
+  const [strokeWidth, setStrokeWidth] = useState(0)
   useEffect(() => {
     const effectImgData: Array<{
       src: string
@@ -80,11 +82,19 @@ const Detail = () => {
           const img = new Image()
           const text2D = new Text({
             text,
-            style: { fillStyle: colorPick, strokeStyle: '#aaa' }
+            style: {
+              fillStyle: fillColor,
+              strokeStyle: strokeColor,
+              lineWidth: strokeWidth / 10
+            }
           })
           const rect2D = new Rectangle({
             size: new Vector2(200, 200),
-            style: { strokeStyle: '#000', lineWidth: 2, fillStyle: colorPick }
+            style: {
+              strokeStyle: strokeColor,
+              lineWidth: strokeWidth / 10,
+              fillStyle: fillColor
+            }
           })
           switch (geometry) {
             case 'rectangle':
@@ -169,7 +179,14 @@ const Detail = () => {
         setVisible={setVisible}
         className={visible ? 'visible' : 'invisible'}
       />
-      <ColorPicker onColorPick={setColorPick} color={colorPick} />
+      <DrawStyle
+        strokeWidth={strokeWidth}
+        setStrokeWidth={setStrokeWidth}
+        fillColor={fillColor}
+        strokeColor={strokeColor}
+        setFillColor={setFillColor}
+        setStrokeColor={setStrokeColor}
+      />
     </div>
   )
 }
