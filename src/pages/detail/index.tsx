@@ -10,6 +10,58 @@ import { Vector2 } from '@canvas/math'
 import DrawStyle from './components/DrawStyle'
 import { Circle } from '@canvas/objects/circle'
 
+const effectImgData: Array<{
+  src: string
+  globalCompositeOperation: GlobalCompositeOperation
+}> = [
+  {
+    src: '',
+    globalCompositeOperation: 'source-over'
+  },
+  {
+    src: '/images/shirt-shadow.jpg.webp',
+    globalCompositeOperation: 'multiply'
+  },
+  {
+    src: '/images/shirt-mask.jpg.webp',
+    globalCompositeOperation: 'destination-in'
+  },
+  {
+    src: '',
+    globalCompositeOperation: 'destination-in'
+  },
+  {
+    src: '/images/shirt-origin.jpg.webp',
+    globalCompositeOperation: 'destination-over'
+  }
+]
+
+function isWebPSupported(callback: (val: boolean) => void) {
+  const img = new Image()
+  img.onload = () => {
+    callback(true)
+  }
+  img.onerror = () => {
+    callback(false)
+  }
+
+  // 测试用的 WebP 数据 URI（包含一个 1x1 的透明像素）
+  img.src = '/images/shirt-shadow.jpg.webp'
+}
+
+isWebPSupported(supported => {
+  if (!supported) {
+    effectImgData.map(item => {
+      if (item.src) {
+        const arr = item.src.split('.')
+        arr.pop()
+        item.src = arr.join('.')
+      }
+      return item
+    })
+  }
+})
+
 const Detail = () => {
   const [strokeColor, setStrokeColor] = useState<string>('rgb(0, 0, 0)')
   const [fillColor, setFillColor] = useState<string>('rgb(0, 0, 0)')
@@ -29,31 +81,6 @@ const Detail = () => {
   const [text, setText] = useState<string>('')
   const [strokeWidth, setStrokeWidth] = useState(0)
   useEffect(() => {
-    const effectImgData: Array<{
-      src: string
-      globalCompositeOperation: GlobalCompositeOperation
-    }> = [
-      {
-        src: '',
-        globalCompositeOperation: 'source-over'
-      },
-      {
-        src: '/images/shirt-shadow.jpg.webp',
-        globalCompositeOperation: 'multiply'
-      },
-      {
-        src: '/images/shirt-mask.jpg.webp',
-        globalCompositeOperation: 'destination-in'
-      },
-      {
-        src: '',
-        globalCompositeOperation: 'destination-in'
-      },
-      {
-        src: '/images/shirt-origin.jpg.webp',
-        globalCompositeOperation: 'destination-over'
-      }
-    ]
     editor.onMounted(
       divRef.current as HTMLDivElement,
       divRightRef.current as HTMLDivElement

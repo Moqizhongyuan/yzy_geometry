@@ -43,6 +43,7 @@ class Effector {
     effectImg2DData.forEach(({ src, globalCompositeOperation }, index) => {
       let image: HTMLImageElement | HTMLCanvasElement = new Image()
       if (src) {
+        console.log(src)
         image.src = src
         pros.push(ImagePromise(image))
       } else {
