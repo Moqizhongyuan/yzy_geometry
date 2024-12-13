@@ -1,3 +1,17 @@
+# [2.3.0](https://github.com/Moqizhongyuan/yzy_geometry/compare/v2.2.0...v2.3.0) (2024-12-13)
+
+### Bug Fixes
+
+- 删除无用代码，增加平滑切换主题效果 ([cd672c9](https://github.com/Moqizhongyuan/yzy_geometry/commit/cd672c94b9f404b0806d7b0adc96c795265a586e))
+
+### Features
+
+- 对代码做降级处理 ([54fb62f](https://github.com/Moqizhongyuan/yzy_geometry/commit/54fb62f1b30d1166a9d58e93acaa7111075bf034))
+- 对无法显示webp的浏览器进行兼容处理 ([d81edc7](https://github.com/Moqizhongyuan/yzy_geometry/commit/d81edc71d6c3066ffeb87d2726d0d92e05af5d86))
+- 实现样式控制器的实时反馈 ([47632e6](https://github.com/Moqizhongyuan/yzy_geometry/commit/47632e6337db007d5ab0401f0044b2e134ef525d))
+- 添加填充和描边样式选择接口 ([cebe89c](https://github.com/Moqizhongyuan/yzy_geometry/commit/cebe89c65bb27f7260da1dc2de824b8a6d3a54db))
+- 添加椭圆类，并给用户绘制接口 ([6604825](https://github.com/Moqizhongyuan/yzy_geometry/commit/66048251f43e11cfe4c457ec7adff194a739c01f))
+
 # [2.2.0](https://github.com/Moqizhongyuan/yzy_geometry/compare/v2.1.0...v2.2.0) (2024-12-12)
 
 ### Bug Fixes
