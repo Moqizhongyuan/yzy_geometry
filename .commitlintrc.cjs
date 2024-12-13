@@ -15,7 +15,7 @@ module.exports = {
         'test', // 添加单元测试、集成测试，修改现有测试。
         'chore', // 例如更新依赖、构建脚本的修改，配置文件更新等。
         'revert', // 因为某个提交引入了错误，进行撤回。
-        'release' // 添加 release 类型
+        'release'
       ]
     ]
   }

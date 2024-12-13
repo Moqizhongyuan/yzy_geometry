@@ -2,30 +2,16 @@ import { visualizer } from 'rollup-plugin-visualizer'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import mkcert from 'vite-plugin-mkcert'
-import VitePluginImp from 'vite-plugin-imp'
 import path from 'path'
 import viteImagemin from 'vite-plugin-imagemin'
 import createPlugins from './plugins'
-// import { chunkSplitPlugin } from 'vite-plugin-chunk-split'
+import legacy from '@vitejs/plugin-legacy'
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
     mkcert(),
     react(),
-    VitePluginImp({
-      libList: [
-        {
-          libName: 'antd',
-          style: name => {
-            if (name === 'col' || name === 'row') {
-              return 'antd/lib/style/index.js'
-            }
-            return `antd/es/${name}/style/index.js`
-          }
-        }
-      ]
-    }),
     ...createPlugins(),
     viteImagemin({
       gifsicle: {
@@ -44,6 +30,10 @@ export default defineConfig({
     visualizer({
       // 打包完成后自动打开浏览器，显示产物体积报告
       open: false
+    }),
+    legacy({
+      // 设置目标浏览器，browserslist 配置语法
+      targets: ['ie >= 11']
     })
   ],
   server: {

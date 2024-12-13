@@ -1,12 +1,11 @@
 import { EventDispatcher } from '../core'
-import { Object2D, Group, Img, Text, Rectangle } from '../objects'
+import { Object2D, Group, Img, Text, Rectangle, Circle } from '../objects'
 import { Scene } from '../core'
 import { OrbitController, TransformController } from '../controller'
 import { selectObj } from '../utils'
 import { Vector2 } from '@canvas/math'
 import { MutableRefObject } from 'react'
 import { queueScene } from '@canvas/nextTicks'
-import { Circle } from '@canvas/objects/circle'
 
 export type CursorType = 'none' | 'default' | 'pointer'
 

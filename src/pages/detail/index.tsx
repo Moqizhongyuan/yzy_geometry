@@ -5,10 +5,9 @@ import { CursorType, Editor } from '@canvas/core/Editor'
 import style from './index.module.scss'
 import { Effector } from '@canvas/core/Effector'
 import Layers, { Layer } from './components/Layers'
-import { Img, Rectangle, Text } from '@canvas/objects'
+import { Img, Rectangle, Text, Circle } from '@canvas/objects'
 import { Vector2 } from '@canvas/math'
 import DrawStyle from './components/DrawStyle'
-import { Circle } from '@canvas/objects/circle'
 
 const effectImgData: Array<{
   src: string
