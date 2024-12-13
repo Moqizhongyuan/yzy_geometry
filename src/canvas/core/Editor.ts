@@ -6,6 +6,7 @@ import { selectObj } from '../utils'
 import { Vector2 } from '@canvas/math'
 import { MutableRefObject } from 'react'
 import { queueScene } from '@canvas/nextTicks'
+import { Circle } from '@canvas/objects/circle'
 
 export type CursorType = 'none' | 'default' | 'pointer'
 
@@ -88,6 +89,11 @@ class Editor extends EventDispatcher {
         resultGroup.add(
           new Rectangle({ position, rotate, scale, offset, uuid, style, size })
         )
+      } else if (obj instanceof Circle) {
+        const { position, rotate, scale, offset, uuid, style, size } = obj
+        resultGroup.add(
+          new Circle({ position, rotate, scale, offset, uuid, style, size })
+        )
       }
       this.render()
     })
@@ -121,6 +127,15 @@ class Editor extends EventDispatcher {
           size,
           style
         })
+      } else if (resultObj instanceof Circle) {
+        resultObj.setOption({
+          position,
+          rotate,
+          scale,
+          offset,
+          size,
+          style
+        })
       }
       this.render()
     })
@@ -144,7 +159,7 @@ class Editor extends EventDispatcher {
     }
   }
 
-  addGeometry(geometry: HTMLImageElement | Text | Rectangle) {
+  addGeometry(geometry: HTMLImageElement | Text | Rectangle | Circle) {
     const {
       group: { children }
     } = this
@@ -191,10 +206,21 @@ class Editor extends EventDispatcher {
       this.group.add(rect)
       this.controller.obj = rect
       return rect
+    } else if (geometry instanceof Circle) {
+      const circle = new Circle({
+        layerNum,
+        name: '图层' + layerNum,
+        size: geometry.size,
+        style: geometry.style
+      })
+      this.setGeometry2DSize(circle, 0.5)
+      this.group.add(circle)
+      this.controller.obj = circle
+      return circle
     }
   }
 
-  setGeometry2DSize(geometry: Img | Text | Rectangle, ratio: number) {
+  setGeometry2DSize(geometry: Img | Text | Rectangle | Circle, ratio: number) {
     const { designSize } = this
     if (geometry instanceof Img) {
       const width = (geometry.image as HTMLImageElement).width
@@ -207,6 +233,11 @@ class Editor extends EventDispatcher {
       geometry.scale.set((designSize * ratio) / geometry.size.height / 5)
       geometry.offset.set(0, 0)
     } else if (geometry instanceof Rectangle) {
+      const w = designSize * ratio
+      const h = (w * geometry.size.height) / geometry.size.width
+      geometry.size.set(w, h)
+      geometry.offset.set(-w / 2, -h / 2)
+    } else if (geometry instanceof Circle) {
       const w = designSize * ratio
       const h = (w * geometry.size.height) / geometry.size.width
       geometry.size.set(w, h)

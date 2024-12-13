@@ -29,6 +29,10 @@ const GeometryMenu = ({
       label: '矩形'
     },
     {
+      key: 'circle',
+      label: '圆形'
+    },
+    {
       key: 'text',
       label: '文字',
       extra: (

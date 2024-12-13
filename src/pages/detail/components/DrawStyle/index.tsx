@@ -114,7 +114,6 @@ const DrawStyle = ({
           width={248}
           height={25}
           onClick={e => handleClick(e, false)}
-          className="cursor-crosshair"
         ></canvas>
         <div className="flex items-center justify-between">
           <div>
@@ -123,7 +122,7 @@ const DrawStyle = ({
               onChange={e => setStrokeColor(e.target.value)}
               value={strokeColor}
               type="text"
-              className="w-[130px]"
+              className="w-[140px]"
             />
           </div>
           <div className="w-5 h-5" style={{ backgroundColor: strokeColor }} />
@@ -133,7 +132,6 @@ const DrawStyle = ({
           width={248}
           height={25}
           onClick={e => handleClick(e, true)}
-          className="cursor-crosshair"
         ></canvas>
         <div className="flex items-center justify-between">
           <div>
@@ -142,7 +140,7 @@ const DrawStyle = ({
               onChange={e => setFillColor(e.target.value)}
               value={fillColor}
               type="text"
-              className="w-[130px]"
+              className="w-[140px]"
             />
           </div>
           <div className="w-5 h-5" style={{ backgroundColor: fillColor }} />

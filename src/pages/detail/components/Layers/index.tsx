@@ -4,7 +4,7 @@ import cn from 'classnames'
 import { Img, Object2D } from '@canvas/objects'
 
 export interface Layer {
-  src: string
+  src?: string
   name: string
   uuid: string
   active: boolean

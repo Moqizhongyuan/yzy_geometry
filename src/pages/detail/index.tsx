@@ -8,6 +8,7 @@ import Layers, { Layer } from './components/Layers'
 import { Img, Rectangle, Text } from '@canvas/objects'
 import { Vector2 } from '@canvas/math'
 import DrawStyle from './components/DrawStyle'
+import { Circle } from '@canvas/objects/circle'
 
 const Detail = () => {
   const [strokeColor, setStrokeColor] = useState<string>('rgb(0, 0, 0)')
@@ -92,24 +93,49 @@ const Detail = () => {
         clickFn={e => {
           const geometry = e.key
           let obj: Img | Text | Rectangle
+          const lineWidth = strokeWidth / 10
           const img = new Image()
           const text2D = new Text({
             text,
             style: {
               fillStyle: fillColor,
               strokeStyle: strokeColor,
-              lineWidth: strokeWidth / 10
+              lineWidth
             }
           })
           const rect2D = new Rectangle({
             size: new Vector2(200, 200),
             style: {
               strokeStyle: strokeColor,
-              lineWidth: strokeWidth / 10,
+              lineWidth,
+              fillStyle: fillColor
+            }
+          })
+          const circle2D = new Circle({
+            size: new Vector2(200, 200),
+            style: {
+              strokeStyle: strokeColor,
+              lineWidth,
               fillStyle: fillColor
             }
           })
           switch (geometry) {
+            case 'circle':
+              obj = editor?.addGeometry(circle2D) as Circle
+              setLayers(prev => {
+                const res = [...prev].map(item => {
+                  item.active = false
+                  return item
+                })
+                res.unshift({
+                  active: true,
+                  uuid: obj.uuid,
+                  name: obj.name,
+                  visible: obj.visible
+                })
+                return res
+              })
+              break
             case 'rectangle':
               obj = editor?.addGeometry(rect2D) as Rectangle
               setLayers(prev => {
@@ -118,7 +144,6 @@ const Detail = () => {
                   return item
                 })
                 res.unshift({
-                  src: img.src,
                   active: true,
                   uuid: obj.uuid,
                   name: obj.name,
@@ -135,7 +160,6 @@ const Detail = () => {
                   return item
                 })
                 res.unshift({
-                  src: img.src,
                   active: true,
                   uuid: obj.uuid,
                   name: obj.name,
