@@ -1,4 +1,10 @@
-import { ReactElement, useEffect, useRef, useState } from 'react'
+import {
+  ReactElement,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState
+} from 'react'
 import GeometryMenu from './components/GeometryMenu'
 import UploadLocalImg from './components/UploadLocalImg'
 import { CursorType, Editor } from '@canvas/core/Editor'
@@ -79,7 +85,7 @@ const Detail = () => {
   >([])
   const [text, setText] = useState<string>('')
   const [strokeWidth, setStrokeWidth] = useState(0)
-  useEffect(() => {
+  useLayoutEffect(() => {
     editor.onMounted(
       divRef.current as HTMLDivElement,
       divRightRef.current as HTMLDivElement
