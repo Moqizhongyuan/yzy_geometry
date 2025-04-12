@@ -10,9 +10,13 @@ type Level = 'worldMatrix' | 'pvmMatrix'
 
 let _bool: boolean = false
 
-const ctx = document
-  .createElement('canvas')
-  .getContext('2d') as CanvasRenderingContext2D
+// 创建一个虚拟上下文对象，确保只在浏览器环境中执行
+let ctx: CanvasRenderingContext2D | null = null
+if (typeof document !== 'undefined') {
+  ctx = document
+    .createElement('canvas')
+    .getContext('2d') as CanvasRenderingContext2D
+}
 
 type ControlFrameType = {
   obj?: Object2D
@@ -198,6 +202,11 @@ class ControlFrame {
 
   /* 获取变换状态 */
   getMouseState(mp: Vector2): State {
+    // 确保在浏览器环境中执行
+    if (typeof document === 'undefined' || !ctx) {
+      return null
+    }
+
     const { clipVertices: fv } = this
 
     /* 对角线距离 */
@@ -238,6 +247,9 @@ class ControlFrame {
     }
 
     /* x向缩放 */
+    // 确保ctx存在
+    if (!ctx) return null
+
     ctx.save()
     ctx.lineWidth = scaleDist
     ctx.beginPath()
@@ -248,6 +260,9 @@ class ControlFrame {
       this.nodeIndex = 14
       return 'scaleX'
     }
+
+    // 确保ctx存在
+    if (!ctx) return null
 
     ctx.save()
     ctx.lineWidth = scaleDist
@@ -261,6 +276,9 @@ class ControlFrame {
     }
 
     /* 移动 */
+    // 确保ctx存在
+    if (!ctx) return null
+
     ctx.beginPath()
     crtPath(ctx, fv)
     if (ctx.isPointInPath(mp.x, mp.y)) {
@@ -268,6 +286,9 @@ class ControlFrame {
     }
 
     /* 旋转 */
+    // 确保ctx存在
+    if (!ctx) return null
+
     ctx.save()
     ctx.lineWidth = 80
     ctx.beginPath()

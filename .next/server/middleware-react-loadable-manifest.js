@@ -1,0 +1,1 @@
+self.__REACT_LOADABLE_MANIFEST="{\"app\\\\detail\\\\page.tsx -> @components/DetailContent\":{\"id\":\"app\\\\detail\\\\page.tsx -> @components/DetailContent\",\"files\":[\"static/css/_app-pages-browser_src_components_DetailContent_index_tsx.css\",\"static/chunks/_app-pages-browser_src_components_DetailContent_index_tsx.js\"]}}"

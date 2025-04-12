@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom'
+'use client'
+
+import Link from 'next/link'
 import Switcher from '../../base/components/Switcher'
 import styles from './index.module.scss'
 import { useContext, useEffect } from 'react'
@@ -58,7 +60,7 @@ const NavBar = () => {
       className={`h-10 flex px-6 border-b-2 transition duration-300 ${styles.nav}`}
     >
       <div className="flex-[3] text-4xl">
-        <Link className="font-semibold hover:opacity-60" to={'/home'}>
+        <Link className="font-semibold hover:opacity-60" href="/home">
           RY
         </Link>
       </div>
@@ -70,7 +72,7 @@ const NavBar = () => {
           icon2={<i className="fa-solid fa-moon" />}
         />
         {items.map(item => (
-          <Link key={item.text} className={styles.link} to={item.url}>
+          <Link key={item.text} className={styles.link} href={item.url}>
             {item.text}
           </Link>
         ))}

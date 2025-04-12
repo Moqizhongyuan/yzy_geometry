@@ -20,7 +20,7 @@ type View = {
 }
 
 class Img extends Object2D {
-  image: CanvasImageSource = new Image()
+  image: CanvasImageSource
   offset: Vector2 = new Vector2()
   size: Vector2 = new Vector2(300, 150)
   view: View | undefined
@@ -32,6 +32,15 @@ class Img extends Object2D {
 
   constructor(attr: ImgType = {}) {
     super()
+
+    // 确保只在浏览器环境中创建Image实例
+    if (typeof window !== 'undefined') {
+      this.image = new Image()
+    } else {
+      // 服务器端渲染时提供空对象
+      this.image = {} as CanvasImageSource
+    }
+
     this.setOption(attr)
   }
 
@@ -40,7 +49,7 @@ class Img extends Object2D {
     for (const [key, val] of Object.entries(attr)) {
       switch (key) {
         case 'src':
-          if (this.image instanceof Image) {
+          if (typeof window !== 'undefined' && this.image instanceof Image) {
             this.image.src = val as string
           }
           break
@@ -55,6 +64,11 @@ class Img extends Object2D {
 
   /* 绘图 */
   drawShape(ctx: CanvasRenderingContext2D) {
+    // 确保在浏览器环境中执行
+    if (typeof window === 'undefined') {
+      return
+    }
+
     const { image, offset, size, view, style } = this
 
     //样式

@@ -12,11 +12,9 @@ type SceneType = {
 
 class Scene extends Group {
   // canvas画布
-  private _canvas = document.createElement('canvas')
+  private _canvas: HTMLCanvasElement
   // canvas 上下文对象
-  private ctx: CanvasRenderingContext2D = this._canvas.getContext(
-    '2d'
-  ) as CanvasRenderingContext2D
+  private ctx: CanvasRenderingContext2D
   // 相机
   camera = new Camera()
   // 是否自动清理画布
@@ -29,6 +27,17 @@ class Scene extends Group {
 
   constructor(backgroundProp?: BackgroundType, attr: SceneType = {}) {
     super()
+
+    // 确保只在浏览器环境中创建canvas
+    if (typeof document !== 'undefined') {
+      this._canvas = document.createElement('canvas')
+      this.ctx = this._canvas.getContext('2d') as CanvasRenderingContext2D
+    } else {
+      // 服务器端渲染时提供空对象
+      this._canvas = {} as HTMLCanvasElement
+      this.ctx = {} as CanvasRenderingContext2D
+    }
+
     this.setOption(attr)
     this.children = []
     if (backgroundProp) {
@@ -55,6 +64,11 @@ class Scene extends Group {
 
   /*  渲染 */
   render() {
+    // 确保在浏览器环境中执行
+    if (typeof document === 'undefined') {
+      return
+    }
+
     const {
       canvas: { width, height },
       ctx,
@@ -85,6 +99,11 @@ class Scene extends Group {
 
   /* client坐标转canvas坐标 */
   clientToCanvas(clientX: number, clientY: number) {
+    // 确保在浏览器环境中执行
+    if (typeof document === 'undefined') {
+      return new Vector2(0, 0)
+    }
+
     const { canvas } = this
     const { left, top } = canvas.getBoundingClientRect()
     return new Vector2(clientX - left, clientY - top)
@@ -105,6 +124,11 @@ class Scene extends Group {
 
   /* 基于某个坐标系，判断某个点是否在图形内 */
   isPointInObj(obj: Object2D, mp: Vector2, matrix: Matrix3 = new Matrix3()) {
+    // 确保在浏览器环境中执行
+    if (typeof document === 'undefined') {
+      return false
+    }
+
     const { ctx } = this
     ctx.beginPath()
     obj.crtPath(ctx, matrix)

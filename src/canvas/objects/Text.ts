@@ -11,9 +11,14 @@ type TextType = Object2DType & {
 }
 
 /* 虚拟上下文对象 */
-const virtuallyCtx = document
-  .createElement('canvas')
-  .getContext('2d') as CanvasRenderingContext2D
+let virtuallyCtx: CanvasRenderingContext2D | null = null
+
+// 确保只在浏览器环境中执行
+if (typeof document !== 'undefined') {
+  virtuallyCtx = document
+    .createElement('canvas')
+    .getContext('2d') as CanvasRenderingContext2D
+}
 
 /* 文字对齐方式引起的偏移量 */
 const alignRatio = {
@@ -60,6 +65,12 @@ class Text extends Object2D {
   /* 文本尺寸 */
   get size(): Vector2 {
     const { style, text, maxWidth } = this
+
+    // 确保virtuallyCtx存在且只在浏览器环境中执行
+    if (!virtuallyCtx) {
+      return new Vector2(0, style.fontSize)
+    }
+
     style.setFont(virtuallyCtx)
     const { width } = virtuallyCtx.measureText(text)
     const w = maxWidth === undefined ? width : Math.min(width, maxWidth)
