@@ -1,3 +1,5 @@
+'use client'
+
 import { Editor } from '@canvas/core/Editor'
 import style from './index.module.scss'
 import cn from 'classnames'
@@ -64,20 +66,30 @@ const Layers = ({
     editor.replaceImg(len - dragIndex, len - index)
   }
 
-  const {
-    controller,
-    group,
-    group: { children }
-  } = editor
-  controller.addEventListener('selected', ({ obj }) => {
-    // 更新图层选择状态
-    activateLayer(children.length - 1 - children.indexOf(obj as Img))
-  })
+  // 添加安全检查，确保在客户端环境下运行
+  if (
+    typeof window !== 'undefined' &&
+    editor &&
+    editor.controller &&
+    editor.group
+  ) {
+    const {
+      controller,
+      group,
+      group: { children }
+    } = editor
 
-  group.addEventListener('remove', ({ obj }) => {
-    // 删除图层
-    removeLayer((obj as Object2D).uuid)
-  })
+    controller.addEventListener('selected', ({ obj }) => {
+      // 更新图层选择状态
+      activateLayer(children.length - 1 - children.indexOf(obj as Img))
+    })
+
+    group.addEventListener('remove', ({ obj }) => {
+      // 删除图层
+      removeLayer((obj as Object2D).uuid)
+    })
+  }
+
   /* 删除图层 */
   function removeLayer(uuid: string) {
     setLayers(prev => [...prev].filter(item => item.uuid !== uuid))
@@ -88,53 +100,57 @@ const Layers = ({
       id="layer"
       className={`flex-1 p-1 space-y-1 overflow-auto transition duration-300 ${style.layerList}`}
     >
-      {layers.map((layer, index) => (
-        <li
-          className={cn(
-            'flex p-2 gap-2 cursor-pointer rounded-md items-center',
-            { [style.active]: layer.active },
-            style.layerItem
-          )}
-          onClick={() => selectLayer(index)}
-          key={layer.uuid}
-          role="button"
-          draggable="true"
-          onDragOver={e => e.preventDefault()}
-          onDragStart={e => dragstart(e, index)}
-          onDrop={e => drop(e, index)}
-        >
-          {
-            <img
-              className={`w-6 h-6 ${layer.src ? '' : 'opacity-0'}`}
-              src={layer.src}
-            />
-          }
-          <div className="flex-1">{layer.name}</div>
-          <div
-            className="hover:bg-gray-500 mr-1 w-6 h-6 text-center rounded transition-all duration-300"
-            role="button"
-            onClick={e => {
-              e.stopPropagation()
-              editor.setVisibleByUUID(layer.uuid)
-              setLayers(prev => {
-                const res = [...prev]
-                res.map((l, i) => {
-                  if (i === index) {
-                    l.visible = !l.visible
+      {Array.isArray(layers)
+        ? layers.map((layer, index) => (
+            <li
+              className={cn(
+                'flex p-2 gap-2 cursor-pointer rounded-md items-center',
+                { [style.active]: layer.active },
+                style.layerItem
+              )}
+              onClick={() => selectLayer(index)}
+              key={layer.uuid}
+              role="button"
+              draggable="true"
+              onDragOver={e => e.preventDefault()}
+              onDragStart={e => dragstart(e, index)}
+              onDrop={e => drop(e, index)}
+            >
+              {
+                <img
+                  className={`w-6 h-6 ${layer.src ? '' : 'opacity-0'}`}
+                  src={layer.src}
+                />
+              }
+              <div className="flex-1">{layer.name}</div>
+              <div
+                className="hover:bg-gray-500 mr-1 w-6 h-6 text-center rounded transition-all duration-300"
+                role="button"
+                onClick={e => {
+                  e.stopPropagation()
+                  if (editor && typeof editor.setVisibleByUUID === 'function') {
+                    editor.setVisibleByUUID(layer.uuid)
                   }
-                })
-                return res
-              })
-            }}
-          >
-            {layer.visible ? (
-              <i className="fa-solid fa-eye" />
-            ) : (
-              <i className="fa-solid fa-circle" />
-            )}
-          </div>
-        </li>
-      ))}
+                  setLayers(prev => {
+                    const res = [...prev]
+                    res.map((l, i) => {
+                      if (i === index) {
+                        l.visible = !l.visible
+                      }
+                    })
+                    return res
+                  })
+                }}
+              >
+                {layer.visible ? (
+                  <i className="fa-solid fa-eye" />
+                ) : (
+                  <i className="fa-solid fa-circle" />
+                )}
+              </div>
+            </li>
+          ))
+        : null}
     </ul>
   )
 }

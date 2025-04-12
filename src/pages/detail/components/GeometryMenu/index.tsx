@@ -1,3 +1,5 @@
+'use client'
+
 import { Input, Menu, MenuProps } from 'antd'
 import MenuItem from 'antd/es/menu/MenuItem'
 import { ReactElement } from 'react'
@@ -23,6 +25,8 @@ const GeometryMenu = ({
   setText: React.Dispatch<React.SetStateAction<string>>
   text: string
 }) => {
+  const imgItems = Array.isArray(localImgs) ? localImgs : []
+
   const menuItems = [
     {
       key: 'rectangle',
@@ -70,13 +74,12 @@ const GeometryMenu = ({
           key: 'localImg',
           label: '上传本地图像'
         },
-        ...[...Array(8)]
-          .map((_, index) => ({
-            key: `img${index} /images/${index + 1}.png`,
-            label: `img${index}`,
-            extra: <img src={`/images/${index + 1}.png`} className="w-6 h-6" />
-          }))
-          .concat(...localImgs)
+        ...[...Array(8)].map((_, index) => ({
+          key: `img${index} /images/${index + 1}.png`,
+          label: `img${index}`,
+          extra: <img src={`/images/${index + 1}.png`} className="w-6 h-6" />
+        })),
+        ...imgItems
       ]
     }
   ]

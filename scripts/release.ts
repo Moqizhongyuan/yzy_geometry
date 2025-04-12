@@ -48,7 +48,7 @@ const dryRun = (bin: string, args: string[]) => {
 
 const run = isDry ? dryRun : directRun
 
-const step = msg => console.log(chalk.cyan(msg))
+const step = (msg: string) => console.log(chalk.cyan(msg))
 
 // 更新 package.json 中的 version 字段
 function updateVersion(version: string) {

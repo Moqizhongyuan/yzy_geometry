@@ -13,7 +13,7 @@ import { CursorType, Editor } from '@canvas/core/Editor'
 import style from '../../pages/detail/index.module.scss'
 import { Effector } from '@canvas/core/Effector'
 import Layers, { Layer } from '../../pages/detail/components/Layers'
-import { Img, Rectangle, Text, Circle } from '@canvas/objects'
+import { Rectangle, Text, Circle } from '@canvas/objects'
 import { Vector2 } from '@canvas/math'
 import DrawStyle from '../../pages/detail/components/DrawStyle'
 
@@ -43,19 +43,6 @@ const effectImgData: Array<{
   }
 ]
 
-function isWebPSupported(callback: (val: boolean) => void) {
-  const img = new Image()
-  img.onload = () => {
-    callback(true)
-  }
-  img.onerror = () => {
-    callback(false)
-  }
-
-  // 测试用的 WebP 数据 URI（包含一个 1x1 的透明像素）
-  img.src = '/images/shirt-shadow.jpg.webp'
-}
-
 const DetailContent = () => {
   const [strokeColor, setStrokeColor] = useState<string>('rgb(0, 0, 0)')
   const [fillColor, setFillColor] = useState<string>('rgb(0, 0, 0)')
@@ -84,6 +71,8 @@ const DetailContent = () => {
   }, [])
 
   useLayoutEffect(() => {
+    if (typeof window === 'undefined') return
+
     editor.onMounted(
       divRef.current as HTMLDivElement,
       divRightRef.current as HTMLDivElement
@@ -101,7 +90,10 @@ const DetailContent = () => {
       effector.onUnmounted()
     }
   }, [editor])
+
   useEffect(() => {
+    if (typeof window === 'undefined') return
+
     const obj = editor.controller.obj
     if (obj) {
       obj.setOption({
@@ -126,7 +118,6 @@ const DetailContent = () => {
         localImgs={localImgs}
         clickFn={e => {
           const geometry = e.key
-          let obj: Img | Text | Rectangle
           const lineWidth = strokeWidth / 10
           const img = new Image()
           const text2D = new Text({
@@ -154,8 +145,7 @@ const DetailContent = () => {
             }
           })
           switch (geometry) {
-            case 'rectangle':
-              obj = rect2D
+            case 'rectangle': {
               const { uuid, name, visible } = editor?.addGeometry(rect2D) ?? {
                 uuid: '',
                 name: '',
@@ -176,8 +166,8 @@ const DetailContent = () => {
                 return res
               })
               break
-            case 'circle':
-              obj = circle2D
+            }
+            case 'circle': {
               const circleShape = editor?.addGeometry(circle2D) ?? {
                 uuid: '',
                 name: '',
@@ -198,8 +188,8 @@ const DetailContent = () => {
                 return res
               })
               break
-            case 'text':
-              obj = text2D
+            }
+            case 'text': {
               const textShape = editor?.addGeometry(text2D) ?? {
                 uuid: '',
                 name: '',
@@ -220,6 +210,7 @@ const DetailContent = () => {
                 return res
               })
               break
+            }
             case 'localImg':
               setVisible(true)
               break
